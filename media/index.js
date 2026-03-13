@@ -1,5 +1,5 @@
 /**
- * MatteDev AI - Sistema Completo
+ * MatteDev AI - Sistema Professionale
  * Backend: Render Proxy
  * Database: Firebase
  */
@@ -38,14 +38,13 @@ const auth = getAuth();
 onAuthStateChanged(auth, (user) => {
     const currentPage = window.location.pathname;
     if (user) {
-        console.log("Bro loggato:", user.email);
+        console.log("Utente autenticato:", user.email);
         if (currentPage.includes("index.html") || currentPage === "/") {
-            // Se è loggato e sta sulla index, portalo in chat
-            // window.location.href = "chat.html"; 
+            // Reindirizzamento opzionale alla chat se già loggato
         }
     } else {
         if (currentPage.includes("chat.html")) {
-            console.warn("Accesso negato, torna al login");
+            console.warn("Sessione non valida. Reindirizzamento al login.");
             window.location.href = "index.html";
         }
     }
@@ -56,30 +55,20 @@ window.login = async function() {
     const email = document.getElementById("email")?.value;
     const pass = document.getElementById("password")?.value;
 
-    if (!email || !pass) return alert("Inserisci i dati, bro!");
+    if (!email || !pass) return alert("Inserire le credenziali di accesso.");
 
     try {
         await signInWithEmailAndPassword(auth, email, pass);
         window.location.href = "chat.html";
     } catch (err) {
-        console.error("Login fail:", err.code);
-        alert("Errore: " + err.message);
+        console.error("Errore autenticazione:", err.code);
+        alert("Errore durante il login: " + err.message);
     }
 };
 
 // Funzione Registrazione
 window.register = async function() {
-    const email = document.getElementById("email")?.value;
-    const pass = document.getElementById("password")?.value;
-
-    if (pass.length < 6) return alert("Password troppo corta, almeno 6 caratteri!");
-
-    try {
-        await createUserWithEmailAndPassword(auth, email, pass);
-        alert("Account creato con successo! Ora effettua il login.");
-    } catch (err) {
-        alert("Errore reg: " + err.message);
-    }
+    window.location.href = "https://account.mattedev.com/login.html#registrazione";
 };
 
 // Funzione Logout
@@ -93,7 +82,6 @@ window.logout = function() {
 // 3. CORE CHAT SYSTEM
 // ==============================
 
-// Funzione principale di invio
 window.handleSend = async function() {
     const input = document.getElementById("user-input");
     const chatContainer = document.getElementById("chat-container");
@@ -103,13 +91,13 @@ window.handleSend = async function() {
     const message = input.value.trim();
     if (!message) return;
 
-    // 1. UI: Aggiungi messaggio utente e pulisci input
+    // 1. UI: Aggiungi messaggio utente
     appendMessage("user", message);
     input.value = "";
     
-    // 2. UI: Mostra indicatore caricamento
+    // 2. UI: Indicatore caricamento
     const loadingId = "loader-" + Date.now();
-    const loadingDiv = appendMessage("ai", "...", loadingId);
+    const loadingDiv = appendMessage("ai", "Elaborazione in corso...", loadingId);
 
     try {
         // 3. API: Chiamata al proxy
@@ -119,13 +107,12 @@ window.handleSend = async function() {
             body: JSON.stringify({ message: message })
         });
 
-        if (!response.ok) throw new Error("Server non risponde");
+        if (!response.ok) throw new Error("Risposta del server non valida");
 
         const data = await response.json();
-        console.log("Dati ricevuti:", data);
 
         // 4. DATA: Estrazione testo
-        let aiResponse = "Non ho capito, puoi ripetere?";
+        let aiResponse = "Impossibile elaborare la richiesta. Riprovare.";
         
         if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
             aiResponse = data.candidates[0].content.parts[0].text;
@@ -133,14 +120,14 @@ window.handleSend = async function() {
             aiResponse = data.reply;
         }
 
-        // 5. UI: Rimuovi loader e aggiungi risposta vera
+        // 5. UI: Sostituzione loader con risposta definitiva
         loadingDiv.remove();
         appendMessage("ai", aiResponse);
 
     } catch (error) {
-        console.error("Chat Error:", error);
+        console.error("Errore di sistema:", error);
         loadingDiv.remove();
-        appendMessage("error", "Bro, il server è esploso. Riprova tra poco.");
+        appendMessage("error", "Errore di connessione. Verificare lo stato del server e riprovare.");
     }
 };
 
@@ -148,12 +135,6 @@ window.handleSend = async function() {
 // 4. UTILS & UI MODIFIERS
 // ==============================
 
-/**
- * Aggiunge un messaggio al box e gestisce lo scroll
- * @param {string} role - 'user', 'ai', o 'error'
- * @param {string} text - il contenuto del messaggio
- * @param {string} id - (opzionale) id univoco
- */
 function appendMessage(role, text, id = null) {
     const container = document.getElementById("chat-container");
     const msgDiv = document.createElement("div");
@@ -161,13 +142,11 @@ function appendMessage(role, text, id = null) {
     msgDiv.className = `msg-wrapper ${role}-wrapper`;
     if (id) msgDiv.id = id;
 
-    // Configura marked per andare a capo con un singolo invio
     marked.setOptions({
         breaks: true,
         gfm: true
     });
 
-    // Se è l'AI, formattiamo il Markdown. Se è l'utente, puliamo solo il testo.
     const content = role === "ai" ? marked.parse(text) : text;
 
     msgDiv.innerHTML = `
@@ -182,15 +161,13 @@ function appendMessage(role, text, id = null) {
     return msgDiv;
 }
 
-// Gestione eventi tastiera
 document.addEventListener("keydown", (e) => {
-    // Se premo Invio e non sto usando lo Shift (per andare a capo)
     if (e.key === "Enter" && !e.shiftKey) {
         if (document.activeElement.id === "user-input") {
-            e.preventDefault(); // Evita il newline nell'input
+            e.preventDefault();
             window.handleSend();
         }
     }
 });
 
-console.log("MatteDev AI System: ONLINE 🚀");
+console.log("MatteDev AI System: ONLINE");
