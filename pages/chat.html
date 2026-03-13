@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>MatteDev Chat</title>
+<link rel="stylesheet" href="../media/index.css">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+
+<div class="chat-window">
+    <div class="chat-header">
+        <h2>MatteDev AI</h2>
+        <button onclick="logout()" class="btn-logout">Esci</button>
+    </div>
+    
+    <div id="chat-container">
+        </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="user-input" placeholder="Chiedimi qualcosa..." autocomplete="off">
+        <button id="send-btn" onclick="handleSend()">Invia</button>
+    </div>
+</div>
+
+<script type="module" src="../media/index.js"></script>
+
+</body>
+</html>
