@@ -2,26 +2,47 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>MatteDev Chat</title>
-<link rel="stylesheet" href="../media/index.css">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-</head>
+<title>Chat</title>
 
+<link rel="stylesheet" href="../media/index.css">
+
+</head>
 <body>
 
-<div class="chat-window">
-    <div class="chat-header">
-        <h2>MatteDev AI</h2>
-        <button onclick="logout()" class="button-logout">Esci</button>
-    </div>
-    
-    <div id="chat-container">
-        </div>
+<div class="hamburger" onclick="toggleSidebar()">☰</div>
 
-    <div class="chat-input-area">
-        <input type="text" id="user-input" placeholder="Chiedimi qualcosa..." autocomplete="off">
-        <button id="send-btn" onclick="handleSend()">Invia</button>
-    </div>
+<div id="sidebar">
+<h3>Cronologia</h3>
+<div id="history"></div>
+
+<button onclick="openSettings()">Impostazioni</button>
+<button class="button-logout" onclick="logout()">Logout</button>
+</div>
+
+<div id="settings-panel">
+<h3>Impostazioni</h3>
+
+<select id="model">
+<option value="gpt">GPT</option>
+<option value="fast">Fast</option>
+</select>
+
+<button onclick="closeSettings()">Chiudi</button>
+</div>
+
+<div class="chat-window">
+
+<div class="chat-header">
+<h2>AI Chat</h2>
+</div>
+
+<div id="chat-container"></div>
+
+<div class="chat-input-area">
+<input id="user-input" placeholder="Scrivi...">
+<button id="send-btn" onclick="sendMessage()">Invia</button>
+</div>
+
 </div>
 
 <script type="module" src="../media/index.js"></script>
