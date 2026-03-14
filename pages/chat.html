@@ -1,51 +1,82 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<title>Chat</title>
-
-<link rel="stylesheet" href="../media/index.css">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+  <link rel="stylesheet" href="../media/index.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
+  <div class="hamburger" onclick="toggleSidebar()">☰</div>
+  <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-<div class="hamburger" onclick="toggleSidebar()">☰</div>
+  <aside id="sidebar" class="glass-panel">
+    <h3>Cronologia</h3>
+    <div id="history-list"></div>
 
-<div id="sidebar">
-<h3>Cronologia</h3>
-<div id="history"></div>
+    <button onclick="openSettings()">Impostazioni</button>
+    <button class="button-logout" onclick="logout()">Logout</button>
+  </aside>
 
-<button onclick="openSettings()">Impostazioni</button>
-<button class="button-logout" onclick="logout()">Logout</button>
-</div>
+  <div class="chat-window">
+    <div class="chat-header">
+      <h2>AI Chat</h2>
+    </div>
 
-<div id="settings-panel">
-<h3>Impostazioni</h3>
+    <div id="chat-container"></div>
 
-<select id="model">
-<option value="gpt">GPT</option>
-<option value="fast">Fast</option>
-</select>
+    <div class="chat-input-area">
+      <input id="user-input" placeholder="Scrivi..." autocomplete="off">
+      <button id="send-btn" onclick="handleSend()">Invia</button>
+    </div>
+  </div>
 
-<button onclick="closeSettings()">Chiudi</button>
-</div>
+  <div id="settings-modal" class="modal">
+    <div class="modal-panel glass-panel">
+      <h3>Impostazioni AI</h3>
 
-<div class="chat-window">
+      <label for="ai-style">Stile</label>
+      <select id="ai-style">
+        <option value="normal">Normale</option>
+        <option value="detailed">Dettagliato</option>
+        <option value="concise">Conciso</option>
+      </select>
 
-<div class="chat-header">
-<h2>AI Chat</h2>
-</div>
+      <label for="ai-tone">Tono</label>
+      <select id="ai-tone">
+        <option value="balanced">Bilanciato</option>
+        <option value="friendly">Amichevole</option>
+        <option value="professional">Professionale</option>
+      </select>
 
-<div id="chat-container"></div>
+      <label for="theme">Tema</label>
+      <select id="theme">
+        <option value="dark">Scuro</option>
+        <option value="light">Chiaro</option>
+      </select>
 
-<div class="chat-input-area">
-<input id="user-input" placeholder="Scrivi...">
-<button id="send-btn" onclick="sendMessage()">Invia</button>
-</div>
+      <label for="memory-note">Nota memoria</label>
+      <textarea id="memory-note" rows="3" placeholder="Informazioni utili da ricordare"></textarea>
 
-</div>
+      <div class="modal-actions">
+        <button onclick="saveSettings()">Salva</button>
+        <button onclick="closeSettings()">Chiudi</button>
+      </div>
+    </div>
+  </div>
 
-<script type="module" src="../media/index.js"></script>
+  <div id="history-modal" class="modal" onclick="closeHistoryModal()">
+    <div class="modal-panel glass-panel" onclick="event.stopPropagation()">
+      <h3>Dettaglio chat</h3>
+      <div id="history-detail-meta" class="history-meta"></div>
+      <div id="history-detail-body"></div>
+      <div class="modal-actions">
+        <button onclick="closeHistoryModal()">Chiudi</button>
+      </div>
+    </div>
+  </div>
 
+  <script type="module" src="../media/index.js"></script>
 </body>
 </html>

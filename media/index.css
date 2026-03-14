@@ -628,3 +628,128 @@ width:100%;
 margin-bottom:10px;
 
 }
+
+/* --- Chat UI wiring fixes + glass effect --- */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+#sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    z-index: 80;
+}
+
+#sidebar-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+#sidebar {
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 8px;
+    overflow-y: auto;
+    max-height: 62vh;
+}
+
+.history-item {
+    text-align: left;
+    margin: 0;
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 12px;
+}
+
+.history-item-title {
+    font-weight: 500;
+}
+
+.history-item-meta,
+.history-meta {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 100;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-panel {
+    width: min(640px, 100%);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.modal-panel h3 {
+    margin-bottom: 12px;
+}
+
+.modal-panel label {
+    display: block;
+    margin: 10px 0 6px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.modal-panel select,
+.modal-panel textarea {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    padding: 10px 12px;
+}
+
+.modal-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+}
+
+.empty-state {
+    opacity: 0.7;
+    padding: 8px 4px;
+}
+
+body[data-theme="light"] {
+    --bg-dark: #eef2f8;
+    --card-bg: rgba(255, 255, 255, 0.6);
+    --accent: #0f172a;
+    --border: rgba(0, 0, 0, 0.12);
+    color: #0f172a;
+}
+
+body[data-theme="light"] .ai-wrapper .msg-bubble {
+    color: #1f2937;
+}

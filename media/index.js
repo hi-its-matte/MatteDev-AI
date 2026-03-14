@@ -17,7 +17,8 @@ import {
   limit
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const PROXY_URL = "https://mdev-ai-backend.onrender.com/chat";
+const DEFAULT_PROXY_URL = "https://mdev-ai-backend.onrender.com/chat";
+const PROXY_URL = window.__CHAT_API_URL__ || DEFAULT_PROXY_URL;
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7Tbqt5FzJK8Z_USkCMWxXiHZp8uRN26A",
@@ -316,7 +317,7 @@ function appendMessage(role, text, id = null) {
 
   const wrapper = document.createElement("div");
 
-  wrapper.className = `msg-wrapper ${role}`;
+  wrapper.className = `msg-wrapper ${role}-wrapper`;
   if (id) wrapper.id = id;
 
   const bubble = document.createElement("div");
@@ -377,6 +378,10 @@ window.handleSend = async function () {
       })
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
     const data = await response.json();
 
     const aiResponse =
@@ -398,12 +403,18 @@ window.handleSend = async function () {
 
     loading.remove();
 
+    const isCorsOrNetworkError =
+      err instanceof TypeError &&
+      /fetch|network|load failed/i.test(err.message);
+
     appendMessage(
       "ai",
-      "Errore di connessione al server."
+      isCorsOrNetworkError
+        ? "Errore di connessione/CORS verso il backend. Verifica CORS sul server o configura un proxy stesso dominio."
+        : `Errore di sistema: ${err.message}`
     );
 
-    console.error(err);
+    console.error("Errore di sistema:", err);
 
   }
 
