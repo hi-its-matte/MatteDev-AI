@@ -9,6 +9,7 @@ import {
 const firebaseConfig = {
   apiKey: "AIzaSyC7Tbqt5FzJK8Z_USkCMWxXiHZp8uRN26A",
   authDomain: "mattedev-account.firebaseapp.com",
+  databaseURL: "https://mattedev-account-default-rtdb.firebaseio.com",
   projectId: "mattedev-account",
   storageBucket: "mattedev-account.firebasestorage.app",
   messagingSenderId: "77268069903",
@@ -17,6 +18,21 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const DISABLED_REDIRECT_URL = "https://account.mattedev.com/account-disabled.html";
+
+function isUserDisabledError(error) {
+  const errorCode = typeof error?.code === "string" ? error.code : "";
+  const errorMessage = typeof error?.message === "string" ? error.message : "";
+
+  return (
+    errorCode === "auth/user-disabled" ||
+    errorMessage.includes("auth/user-disabled")
+  );
+}
+
+function redirectToDisabledPage() {
+  window.location.assign(DISABLED_REDIRECT_URL);
+}
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -37,6 +53,11 @@ window.login = async function login() {
     await signInWithEmailAndPassword(auth, email, password);
     window.location.href = "chat.html";
   } catch (error) {
+    if (isUserDisabledError(error)) {
+      redirectToDisabledPage();
+      return;
+    }
+
     console.error("Login fallito:", error);
     alert("Errore login: " + error.message);
   }
@@ -60,6 +81,11 @@ window.register = async function register() {
     await createUserWithEmailAndPassword(auth, email, password);
     window.location.href = "chat.html";
   } catch (error) {
+    if (isUserDisabledError(error)) {
+      redirectToDisabledPage();
+      return;
+    }
+
     console.error("Registrazione fallita:", error);
     alert("Errore registrazione: " + error.message);
   }

@@ -51,9 +51,6 @@ let currentSettings = { aiStyle: "normal", aiTone: "balanced", memoryNote: "" };
 
 const ALLOWED_MODELS = new Set([
   'gemini-3.1-flash-lite-preview',
-  'gemma-3-2b-it',
-  'gemma-3-12b-it',
-  'gemma-3-27b-it'
 ]);
 
 let userMemory = {
@@ -105,17 +102,33 @@ function sanitizeTitle(text) {
 function getCurrentIsoDate() { return new Date().toISOString(); }
 
 function buildSystemMemoryPrompt() {
-  const { contextMemory, personalization, preferences } = userMemory;
+  const { contextMemory, personalization } = userMemory;
+
   const factsText = contextMemory.facts?.length
     ? contextMemory.facts.map(f => `- ${f}`).join("\n")
     : "- Nessun fatto utente salvato";
+
   return [
-    "Memoria utente persistente:",
-    `Nota memoria: ${contextMemory.note || "nessuna"}`,
-    `Stile AI: ${personalization.aiStyle || "normal"}`,
-    `Tono AI: ${personalization.aiTone || "balanced"}`,
-    `Lingua preferita: ${preferences.language || "it"}`,
-    "Fatti importanti:",
+    "🎓 MODALITÀ SCHOOL ATTIVA",
+    "",
+    "Sei un tutor scolastico.",
+    "",
+    "REGOLE OBBLIGATORIE:",
+    "- NON risolvere esercizi direttamente",
+    "- NON dare risposte finali pronte",
+    "- Spiega passo passo",
+    "- Guida lo studente con domande",
+    "- Dai esempi simili ma NON identici",
+    "",
+    "OBIETTIVO:",
+    "Far capire allo studente, non fare i compiti al posto suo.",
+    "",
+    "Memoria utente:",
+    `Nota: ${contextMemory.note || "nessuna"}`,
+    `Stile: ${personalization.aiStyle}`,
+    `Tono: ${personalization.aiTone}`,
+    "",
+    "Fatti:",
     factsText
   ].join("\n");
 }
@@ -407,7 +420,7 @@ function appendMessage(role, text) {
   if (isAI) {
     const avatar = document.createElement("div");
     avatar.className   = "ai-avatar";
-    avatar.textContent = "🤖";
+    avatar.textContent = "📚";
     wrapper.appendChild(avatar);
   }
 
@@ -432,7 +445,7 @@ function showTyping() {
   const w = document.createElement("div");
   w.className = "msg-wrapper ai-wrapper";
   w.id = "__typing__";
-  w.innerHTML = `<div class="ai-avatar">🤖</div>
+  w.innerHTML = `<div class="ai-avatar">📚</div>
     <div class="typing-indicator"><span></span><span></span><span></span></div>`;
   container.appendChild(w);
   scrollToBottom();
@@ -463,13 +476,10 @@ async function sendMessage(message) {
   appendMessage("user", message);
   showTyping();
 
-  const modelDropdown = document.getElementById("ai-model");
-  const selectedModel = (modelDropdown && ALLOWED_MODELS.has(modelDropdown.value))
-    ? modelDropdown.value
-    : "gemini-2.5-flash-lite-preview-06-17";
-
-  const controller = new AbortController();
-  const timerId    = setTimeout(() => controller.abort(), 20000);
+  const selectedModel = "gemini-3.1-flash-lite-preview";
+  const controller    = new AbortController();
+  const timerId       = setTimeout(() => controller.abort(), 20000);
+  const taggedMessage = "[SCHOOL_MODE]\n" + message;
 
   // FIX BUG 2: salva subito il messaggio utente su Firestore
   await appendMessageToFirestore(activeChatId, "user", message);
@@ -481,7 +491,7 @@ async function sendMessage(message) {
       signal: controller.signal,
       body: JSON.stringify({
         chatId:             activeChatId,
-        message:            message,
+        message:            taggedMessage,
         uid:                currentUser.uid,
         history:            activeChatHistory.slice(-40),
         settings:           currentSettings,
@@ -501,15 +511,21 @@ async function sendMessage(message) {
     const data       = await response.json();
     const aiResponse = data.reply || "Errore AI";
 
+    let safeResponse = aiResponse;
+
+    if (/risultato\s*[:=]|soluzione\s*[:=]|=|\bfinale\b|\bquindi\b/i.test(aiResponse)) {
+      safeResponse = "Proviamo insieme 🙂 Ti guido passo passo.";
+    }
+
     removeTyping();
-    appendMessage("assistant", aiResponse);
+    appendMessage("assistant", safeResponse);
 
-    activeChatHistory.push({ role: "user",  text: message     });
-    activeChatHistory.push({ role: "model", text: aiResponse  });
+    activeChatHistory.push({ role: "user",  text: message      });
+    activeChatHistory.push({ role: "model", text: safeResponse });
 
-    await appendMessageToFirestore(activeChatId, "assistant", aiResponse);
-    await updateChatMetadata(activeChatId, { lastMessage: aiResponse });
-    await updatePersistentMemory(message, aiResponse);
+    await appendMessageToFirestore(activeChatId, "assistant", safeResponse);
+    await updateChatMetadata(activeChatId, { lastMessage: safeResponse });
+    await updatePersistentMemory(message, safeResponse);
     await loadChats();
 
   } catch (err) {
@@ -517,11 +533,11 @@ async function sendMessage(message) {
     clearTimeout(timerId);
 
     let msg = "Errore di connessione.";
-    if (err.name === "AbortError")                     msg = "Il server ha impiegato troppo tempo.";
-    else if (err.message.includes("Gemini API error")) msg = "Errore dalle API di Google.";
+    if (err.name === "AbortError")                        msg = "Il server ha impiegato troppo tempo.";
+    else if (err.message.includes("Gemini API error"))    msg = "Errore dalle API di Google.";
 
     appendMessage("assistant", msg);
-    console.error("Dettaglio errore:", err);
+    console.error("Errore:", err);
   } finally {
     isSending = false;
   }

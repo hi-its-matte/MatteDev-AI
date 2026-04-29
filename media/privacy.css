@@ -1,0 +1,20 @@
+/* =====================================================
+PRIVACY PAGE - STYLES
+===================================================== */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 40px;
+}
+
+ol {
+    max-width: 700px;
+    margin: 0 auto;   /* centra la lista */
+    padding-left: 25px;
+}
+
+ol li {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
