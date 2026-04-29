@@ -4,79 +4,219 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy - MatteDev AI</title>
-  <link rel="stylesheet" href="/media/privacy.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #131314;
+      --text1: #e3e3e3;
+      --text2: #9aa0a6;
+      --text3: #5f6368;
+      --accent: #8ab4f8;
+      --surface: #1e1f20;
+      --surface2: #282a2c;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    html, body {
+      font-family: 'Google Sans', 'Roboto', sans-serif;
+      line-height: 1.6;
+      color: var(--text1);
+      background: var(--bg);
+    }
+
+    body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1, h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; }
+    h1 { border-bottom: 3px solid var(--accent); padding-bottom: 10px; color: var(--text1); }
+    h2 { color: var(--accent); }
+    h3 { color: var(--text2); }
+    
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    ul { margin-left: 20px; }
+    li { margin: 8px 0; }
+    strong { color: var(--text1); }
+    
+    .timestamp { color: var(--text2); font-size: 0.9em; }
+    .section { 
+      margin: 20px 0; 
+      padding: 20px; 
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px; 
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      margin-bottom: 20px;
+      background-color: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn:hover {
+      background-color: #b3d5ff;
+    }
+  </style>
 </head>
 <body>
-  <h1>Privacy Policy (Bozza) — MatteDev AI</h1>
-  
+  <a href="../chat.html" class="btn">Torna alla chat</a>
+  <h1>🔒 Privacy Policy — MatteDev AI</h1>
+  <p class="timestamp"><strong>Data aggiornamento:</strong> 29 Aprile 2026</p>
+  <p class="timestamp"><strong>Versione:</strong> 1.0</p>
 
-  <h2>2. Privacy Policy</h2>
+  <div class="section">
+    <h2>1. Titolare del Trattamento</h2>
+    <p>
+      <strong>Sviluppatore/Titolare:</strong> MatteDev<br>
+      <strong>Contatto Privacy:</strong> <a href="mailto:privacy@mattedev.com">privacy@mattedev.com</a>
+    </p>
+  </div>
 
-  <h3>2.1 Titolare del trattamento</h3>
-  <p>Titolare: <strong>[INSERIRE DATI TITOLARE]</strong><br>
-  Contatto privacy: <strong>[INSERIRE EMAIL]</strong></p>
+  <div class="section">
+    <h2>2. Quali Dati Raccogliamo</h2>
+    <p>Durante l'utilizzo di MatteDev AI, trattiamo i seguenti dati personali:</p>
+    <ul>
+      <li><strong>Dati di Autenticazione:</strong> email, UID Firebase (identificativo univoco), immagine profilo</li>
+      <li><strong>Contenuti Chat:</strong> messaggi da te inviati e risposte AI generate</li>
+      <li><strong>Memoria Utente:</strong> preferenze di personalizzazione (stile AI, tono, lingua), note personali e fatti salvati per la personalizzazione</li>
+      <li><strong>Dati Tecnici:</strong> timestamp, metadati delle chat, log di errori, informazioni sui modelli AI utilizzati</li>
+    </ul>
+    <p><strong>⚠️ NESSUN COOKIE DI TRACCIAMENTO:</strong> Non utilizziamo cookie di tracciamento analitico o pubblicitario. I soli dati memorizzati lato client sono quelli necessari al funzionamento della sessione.</p>
+  </div>
 
-  <h3>2.2 Dati trattati</h3>
-  <p>A seconda dell'uso del servizio, possiamo trattare:</p>
-  <ul>
-    <li>identificativi account (UID, email se disponibile via auth provider);</li>
-    <li>contenuti chat (messaggi utente/assistant e metadati del thread);</li>
-    <li>memoria utente (contextMemory, personalization, preferences, chatHistory);</li>
-    <li>dati tecnici minimi (log applicativi, errori API, timestamp, IP lato server).</li>
-  </ul>
+  <div class="section">
+    <h2>3. Perché Raccogliamo Questi Dati</h2>
+    <p><strong>Base Giuridica (GDPR art. 6):</strong></p>
+    <ul>
+      <li><strong>Esecuzione del Contratto (Art. 6.1.b):</strong> per fornire il servizio di chat AI personalizzata</li>
+      <li><strong>Interesse Legittimo (Art. 6.1.f):</strong> per sicurezza, prevenzione abusi, miglioramento del servizio, debug</li>
+      <li><strong>Obbligo Legale (Art. 6.1.c):</strong> se richiesto da leggi applicabili</li>
+      <li><strong>Consentimento (Art. 6.1.a):</strong> per finalità ulteriori non strettamente necessarie</li>
+    </ul>
+    <p><strong>Finalità specifiche:</strong></p>
+    <ul>
+      <li>Erogazione del servizio di assistenza conversazionale</li>
+      <li>Personalizzazione delle risposte e memoria del contesto utente</li>
+      <li>Monitoraggio della sicurezza e prevenzione abusi</li>
+      <li>Debug, diagnostica e miglioramento del servizio</li>
+      <li>Adempimenti legali e contrattuali</li>
+    </ul>
+  </div>
 
-  <h3>2.3 Finalità e base giuridica (GDPR)</h3>
-  <p>Finalità principali:</p>
- 
-    erogare il servizio di chat AI (esecuzione del contratto);
-    personalizzare risposte e memoria utente (esecuzione del contratto/interesse legittimo);
-    sicurezza, prevenzione abusi e debug (interesse legittimo);
-    adempimenti normativi (obbligo legale).
+  <div class="section">
+    <h2>4. Con Chi Condividiamo i Tuoi Dati</h2>
+    <p>Per erogare il servizio, coinvolgiamo i seguenti Responsabili del Trattamento e fornitori:</p>
+    <ul>
+      <li>
+        <strong>Google Firebase</strong> (Authentication, Firestore, Realtime Database)
+        <ul>
+          <li>Memorizzazione dati utente, chat, memoria personalizzata</li>
+          <li>Gestione autenticazione e sessioni</li>
+          <li>Ubicazione: Infrastrutture Google (extra-UE)</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Google Gemini API</strong> (generazione risposte AI)
+        <ul>
+          <li>Elaborazione dei tuoi messaggi per generare risposte</li>
+          <li>Ubicazione: Infrastrutture Google (extra-UE)</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Google Fonts</strong> (caricamento font web)
+        <ul>
+          <li>Carica font da googleapis.com per l'interfaccia</li>
+          <li>Sottoposto a Accordo di Trattamento Google</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Marked.js / jsDelivr CDN</strong> (rendering markdown)
+        <ul>
+          <li>Libreria per visualizzare formattazione nei messaggi</li>
+          <li>Caricata da CDN pubblico</li>
+        </ul>
+      </li>
+      
+    </ul>
+    <p><strong>Si consiglia di visionare le privacy policy dei fornitori per poter comprendere come i tuoi dati vengano trattati da questi ultimi.</strong></p>
 
+    <p><strong>Avviso Importante:</strong> Alcuni fornitori sono ubicati fuori dall'UE. Google ha implementato Clausole Contrattuali Standard per il trasferimento dati conforme al GDPR.</p>
+  </div>
 
-  <h3>2.4 Fornitori e responsabili esterni</h3>
-  <p>Per fornire il servizio possono essere coinvolti:</p>
-  <ul>
-    <li><strong>Firebase</strong> (Authentication + Firestore);</li>
-    <li><strong>Render</strong> (hosting backend);</li>
-    <li><strong>Google Gemini API</strong> (generazione risposte AI).</li>
-  </ul>
-  <p>I dati possono transitare su infrastrutture extra-UE in base alla configurazione dei fornitori.</p>
+  <div class="section">
+    <h2>5. Per Quanto Tempo Conserviamo i Dati</h2>
+    <ul>
+      <li><strong>Chat e messaggi:</strong> Conservati finché non li elimini manualmente o finché non viene richiesta la cancellazione</li>
+      <li><strong>Memoria utente (fatti, preferenze, note):</strong> Conservati fino a eliminazione da parte tua</li>
+      <li><strong>Account (email, UID):</strong> Conservato finché mantenevi l'account attivo; cancellabile su richiesta</li>
+      <li><strong>Backup:</strong> Possono esistere copie di backup per massimo 90 giorni</li>
+    </ul>
+    <p><em>Nota: La cancellazione account rimuove definitivamente i dati, salvo obblighi legali o backup residui.</em></p>
+  </div>
 
-  <h3>2.5 Conservazione dei dati</h3>
-  <ul>
-    <li>Chat thread: fino a cancellazione da parte utente o policy interna.</li>
-    <li>Memoria utente: mantenuta finché utile alla personalizzazione o fino a richiesta di cancellazione.</li>
-    <li>Log tecnici: conservazione limitata e proporzionata a sicurezza/debug.</li>
-  </ul>
+  <div class="section">
+    <h2>6. I Tuoi Diritti GDPR</h2>
+    <p>Hai diritto a:</p>
+    <ul>
+      <li><strong>Accesso (Art. 15):</strong> Richiedere copia di tutti i tuoi dati</li>
+      <li><strong>Rettifica (Art. 16):</strong> Correggere dati inesatti</li>
+      <li><strong>Cancellazione (Art. 17):</strong> Eliminare i tuoi dati ("diritto all'oblio")</li>
+      <li><strong>Limitazione (Art. 18):</strong> Limitare il trattamento dei dati</li>
+      <li><strong>Portabilità (Art. 20):</strong> Ricevere i tuoi dati in formato strutturato</li>
+      <li><strong>Opposizione (Art. 21):</strong> Opporsi al trattamento per scopi specifici</li>
+      <li><strong>Non Automatizzazione (Art. 22):</strong> Diritto a decisioni umane su dati sensibili</li>
+    </ul>
+    <p>Per esercitare questi diritti, contatta: <a href="mailto:privacy@mattedev.com">privacy@mattedev.com</a></p>
+  </div>
 
-  <h3>2.6 Diritti dell'interessato</h3>
-  <p>L'utente può esercitare diritti GDPR (accesso, rettifica, cancellazione, limitazione, opposizione, portabilità) e revoca consenso ove applicabile. Inserire canale operativo per richieste (email + tempi di risposta).</p>
+  <div class="section">
+    <h2>7. Sicurezza dei Dati</h2>
+    <ul>
+      <li>Crittografia in transito (HTTPS/TLS)</li>
+      <li>Firebase garantisce crittografia a riposo per database</li>
+      <li>Accesso limitato ai dati solo per personale autorizzato</li>
+      <li>Audit regolari di sicurezza</li>
+      <li>In caso di violazione dati, ti contatteremo entro 72 ore (ove obbligatorio)</li>
+    </ul>
+  </div>
 
-  <h3>2.7 Sicurezza</h3>
-  <p>Misure consigliate:</p>
-  <ul>
-    <li>regole Firestore restrittive per UID;</li>
-    <li>trasporto HTTPS;</li>
-    <li>secret API in variabili ambiente;</li>
-    <li>minimizzazione dati e limiti di retention;</li>
-    <li>monitoraggio accessi e audit log ove disponibili.</li>
-  </ul>
+  <div class="section">
+    <h2>8. Modifiche alla Privacy Policy</h2>
+    <p>Ci riserviamo il diritto di aggiornare questa policy. I cambiamenti saranno pubblicati qui con avviso di aggiornamento. L'uso continuato del servizio dopo modifiche significa accettazione dei nuovi termini.</p>
+  </div>
 
-  <h3>2.8 Minori</h3>
-  <p>L'età minima per l'uso del servizio è di 13 anni. Per gli utenti minori di 14 anni, è richiesto il consenso dei genitori o tutelati.</p>
+  <div class="section">
+    <h2>9. Contatti</h2>
+    <p>
+      Per domande su privacy e GDPR:<br>
+      <strong>Email:</strong> <a href="mailto:privacy@mattedev.com">privacy@mattedev.com</a><br>
+      <strong>Sito:</strong> <a href="https://mattedev.com">mattedev.com</a>
+    </p>
+  </div>
 
-  
-
-  <h3>2.9 Modifiche alla privacy policy</h3>
-  <p>La policy può essere aggiornata. In caso di modifiche rilevanti, prevedere notifica in-app/sito.</p>
-
-<h3>3. Servizi esterni
-
-</h3>
-  
-<p>Trattiamo dati account, messaggi chat e preferenze memoria per fornire e migliorare il servizio. Usiamo fornitori come Firebase, Render e Gemini API. Questi servizi raccolgono o potrebbero raccogliere in modo autonomo dati personali. </p>
-
-    <a href="mailto:officicial@mattedev.com">Contatti per segnalazioni o richieste</a>
 </body>
 </html>

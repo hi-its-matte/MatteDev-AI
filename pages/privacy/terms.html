@@ -4,81 +4,319 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Termini di Servizio - MatteDev AI</title>
-  <link rel="stylesheet" href="/media/privacy.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #131314;
+      --text1: #e3e3e3;
+      --text2: #9aa0a6;
+      --text3: #5f6368;
+      --accent: #8ab4f8;
+      --surface: #1e1f20;
+      --surface2: #282a2c;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    html, body {
+      font-family: 'Google Sans', 'Roboto', sans-serif;
+      line-height: 1.6;
+      color: var(--text1);
+      background: var(--bg);
+    }
+
+    body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1, h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; }
+    h1 { border-bottom: 3px solid var(--accent); padding-bottom: 10px; color: var(--text1); }
+    h2 { color: var(--accent); }
+    h3 { color: var(--text2); }
+    
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    ul { margin-left: 20px; }
+    li { margin: 8px 0; }
+    strong { color: var(--text1); }
+    
+    .timestamp { color: var(--text2); font-size: 0.9em; }
+    .section { 
+      margin: 20px 0; 
+      padding: 20px; 
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px; 
+    }
+    
+    .warning { 
+      background: rgba(255, 193, 7, 0.15);
+      padding: 20px; 
+      border-left: 4px solid #ffc107; 
+      margin: 20px 0; 
+      border-radius: 8px;
+      color: #ffc107;
+    }
+    
+    .warning strong {
+      color: #ffc107;
+    }
+    
+    .disclaimer { 
+      background: rgba(220, 53, 69, 0.15);
+      padding: 20px; 
+      border-left: 4px solid #dc3545; 
+      margin: 20px 0; 
+      border-radius: 8px;
+      color: #ff7f7f;
+    }
+    
+    .disclaimer strong {
+      color: #ff7f7f;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      margin-bottom: 20px;
+      background-color: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn:hover {
+      background-color: #b3d5ff;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>TERMINI DI USO — MATTEDEV AI</h1>
+<a href="../chat.html" class="btn">Torna alla chat</a>
 
-<p><strong>Versione:</strong> 1.0</p>
-<p><strong>Data ultimo aggiornamento:</strong> [INSERIRE DATA]</p>
+<h1>⚖️ Termini di Servizio — MatteDev AI</h1>
+<p class="timestamp"><strong>Data aggiornamento:</strong> 29 Aprile 2026</p>
+<p class="timestamp"><strong>Versione:</strong> 1.0</p>
 
-<ol>
+<div class="warning">
+  <strong>⚠️ LEGGI ATTENTAMENTE:</strong> Accedendo a MatteDev AI, accetti integralmente questi Termini di Servizio. Se non accetti, non puoi utilizzare il servizio.
+</div>
 
-<li>
-<strong>OGGETTO DEL SERVIZIO</strong><br>
-MatteDev AI è un servizio di assistenza conversazionale basato su intelligenza artificiale.
-Il servizio consente all'utente di creare chat multiple, inviare richieste e ricevere risposte generate da modelli AI.
-</li>
+<div class="section">
+  <h2>1. Oggetto del Servizio</h2>
+  <p>
+    MatteDev AI ("il Servizio") è una piattaforma di assistenza conversazionale basata su modelli di intelligenza artificiale 
+    (inclusi Google Gemini e Gemma). Il servizio consente all'utente di:
+  </p>
+  <ul>
+    <li>Creare e gestire conversazioni (chat) multiple</li>
+    <li>Inviare domande e richieste agli assistenti AI</li>
+    <li>Ricevere risposte generate automaticamente da modelli AI</li>
+    <li>Personalizzare il tono, stile e memoria della conversazione</li>
+  </ul>
+  <p><strong>Il Servizio è fornito "così com'è" (AS IS) senza garanzie specifiche.</strong></p>
+</div>
 
-<li>
-<strong>ACCETTAZIONE</strong><br>
-Utilizzando il servizio, l'utente dichiara di aver letto e accettato integralmente i presenti Termini di Uso.
-</li>
+<div class="section">
+  <h2>2. Accettazione dei Termini</h2>
+  <p>
+    Utilizzando MatteDev AI, in qualsiasi forma (browser web, API, etc.), tu dichiara di:
+  </p>
+  <ul>
+    <li>Aver letto, compreso e accettato integralmente questi Termini</li>
+    <li>Aver raggiunto l'età legale di maggioranza nel tuo paese</li>
+    <li>Avere il diritto di accettare questi Termini (non rappresenti organizzazioni senza autorizzazione)</li>
+    <li>Accettare eventuali modifiche future ai Termini continuando ad usare il servizio</li>
+  </ul>
+</div>
 
-<li>
-<strong>ACCOUNT E SICUREZZA</strong><br>
-L'accesso può richiedere autenticazione. L'utente è responsabile della custodia delle credenziali e di tutte le attività effettuate col proprio account.
-</li>
+<div class="section">
+  <h2>3. Account e Responsabilità</h2>
+  <p><strong>3.1 Credenziali di Accesso:</strong></p>
+  <ul>
+    <li>Tu sei <strong>unicamente responsabile</strong> della custodia di email e password</li>
+    <li>Non condividere le tue credenziali con terzi</li>
+    <li>Tutte le attività effettuate dal tuo account sono a tua responsabilità</li>
+    <li>Notifica immediatamente anomalie o accessi non autorizzati a: <a href="mailto:cybersecurity@mattedev.com">cybersecurity@mattedev.com</a></li>
+  </ul>
+  <p><strong>3.2 Dati dell'Account:</strong></p>
+  <ul>
+    <li>Fornisci informazioni accurate durante la registrazione</li>
+    <li>Mantieni i dati del profilo aggiornati</li>
+    <li>Sei responsabile di eventuali violazioni dovute a informazioni false</li>
+  </ul>
+</div>
 
-<li>
-<strong>USO CONSENTITO</strong>
-<ul>
-<li>non usare il servizio per attività illegali</li>
-<li>non violare diritti di terzi</li>
-<li>non distribuire malware, spam o contenuti dannosi</li>
-<li>non tentare accessi non autorizzati o abuso infrastrutturale</li>
-</ul>
-</li>
+<div class="section">
+  <h2>4. Regole di Utilizzo — Cosa NON Puoi Fare</h2>
+  <p>Ti impegni a <strong>NON</strong> utilizzare MatteDev AI per:</p>
+  <ul>
+    <li><strong>Attività Illegali:</strong> Qualunque attività che viola leggi locali, nazionali o internazionali</li>
+    <li><strong>Violazione Diritti di Terzi:</strong> Infrangere copyright, brevetti, marchi, privacy di altri</li>
+    <li><strong>Contenuti Dannosi:</strong> Distribuire malware, virus, codice maligno, spam, phishing</li>
+    <li><strong>Accessi Non Autorizzati:</strong> Tentare di hackerare, bypassare sicurezza, ottenere accesso non autorizzato</li>
+    <li><strong>Abuso dell'Infrastruttura:</strong> DoS, DDoS, scraping massivo, load test senza autorizzazione</li>
+    <li><strong>Molestie/Abusi:</strong> Harassment, minacce, hate speech, discriminazione</li>
+    <li><strong>Reverse Engineering:</strong> Decompilare, disassemblare, cercare vulnerabilità senza autorizzazione</li>
+    <li><strong>Uso Commerciale Non Autorizzato:</strong> Reseller, rivendita, commercializzazione senza accordo</li>
+    <li><strong>Violazione dei Diritti d'Autore dell'AI:</strong> Non puoi addestrare modelli competitor sui nostri output senza permesso</li>
+  </ul>
+  <p><strong>Violazioni di queste regole risulteranno in sospensione o chiusura account immediata e potranno avere conseguenze legali.</strong></p>
+</div>
 
-<li>
-<strong>CONTENUTI E OUTPUT AI</strong><br>
-Le risposte generate dall'AI possono essere imprecise o incomplete. L'utente è tenuto a verificare autonomamente qualsiasi informazione critica.
-</li>
+<div class="disclaimer">
+  <h2>5. 🔴 DISCLAIMER CRITICO: Non Siamo Uno Psicologo</h2>
+  <p><strong>AVVISO MEDICO E LEGALE:</strong></p>
+  <ul>
+    <li>
+      <strong>MatteDev AI NON è un servizio medico, psicologico o di consulenza legale.</strong>
+      Le risposte generate non sostituiscono il parere di professionisti qualificati (medici, psicologi, avvocati).
+    </li>
+    <li>
+      <strong>Per emergenze psicologiche/mediche, contatta immediatamente:</strong>
+      <ul>
+        <li>🚨 In Italia: Pronto Soccorso (112) o Telefono Amico (02 2327 2327)</li>
+        <li>🚨 In altri paesi: Pronto Soccorso locale o servizi di crisi</li>
+      </ul>
+    </li>
+    <li><strong>Non dipendere da questo servizio per diagnosi, cure, trattamenti medici o decisioni legali importanti.</strong></li>
+    <li>Qualsiasi uso per scopi medici/legali è a tuo esclusivo rischio e responsabilità.</li>
+  </ul>
+</div>
 
-<li>
-<strong>LIMITAZIONE DI RESPONSABILITÀ</strong><br>
-Il servizio è fornito "così com'è". Il titolare non garantisce continuità assoluta o assenza di errori.
-</li>
+<div class="section">
+  <h2>6. Contenuti e Output IA</h2>
+  <p><strong>6.1 Accuratezza e Validità:</strong></p>
+  <ul>
+    <li>Le risposte generate dall'AI <strong>possono essere imprecise, incomplete, outdated o errate</strong></li>
+    <li>Non garantiamo correttezza, completezza o applicabilità a situazioni specifiche</li>
+    <li><strong>Verifica sempre autonomamente</strong> informazioni critiche da fonti ufficiali</li>
+    <li>L'AI può inventare dati (hallucination), citare fonti inesatte, dare consiglio errato</li>
+  </ul>
+  <p><strong>6.2 Proprietà Intellettuale:</strong></p>
+  <ul>
+    <li>Contenuti e dati personali che invii rimangono tuoi</li>
+    <li>Puoi usare gli output del servizio con le limitazioni di legge applicabili</li>
+    <li>Non puoi affermare che gli output provengono da un'opera protetta senza verifica</li>
+    <li>Rimani responsabile dell'uso legale e etico degli output</li>
+  </ul>
+  <p><strong>6.3 Contenuti Discutibili:</strong></p>
+  <ul>
+    <li>L'AI potrebbe generare contenuti offensivi, stereotipati, biased o problematici</li>
+    <li>Non endossiamo il contenuto generato; è responsabilità tua valutarlo</li>
+    <li>Puoi segnalare contenuti problematici a: <a href="mailto:abuse@mattedev.com">abuse@mattedev.com</a></li>
+  </ul>
+</div>
 
-<li>
-<strong>DISPONIBILITÀ E MODIFICHE DEL SERVIZIO</strong><br>
-Il servizio può essere sospeso, modificato o interrotto per manutenzione o evoluzione tecnica.
-</li>
+<div class="section">
+  <h2>7. Disponibilità e Limitazioni del Servizio</h2>
+  <ul>
+    <li>Il servizio è fornito "così com'è" senza garanzie di disponibilità continua</li>
+    <li>Potremmo interrompere, modificare o terminare il servizio con breve preavviso (30 giorni dove possibile)</li>
+    <li>Potrebbero verificarsi downtime per manutenzione, update, emergenze di sicurezza</li>
+    <li>Non siamo responsabili per danni derivanti da interruzioni del servizio</li>
+    <li>Rate limiting e throttling possono essere applicati per proteggere l'infrastruttura</li>
+  </ul>
+</div>
 
-<li>
-<strong>SOSPENSIONE O REVOCA ACCESSO</strong><br>
-Il titolare può sospendere o revocare l'accesso in caso di violazione dei presenti termini.
-</li>
+<div class="section">
+  <h2>8. Limitazione di Responsabilità</h2>
+  <p><strong>IN NESSUN CASO MATTEDEV sarà responsabile per:</strong></p>
+  <ul>
+    <li>Danni diretti, indiretti, incidentali, speciali o consequenziali</li>
+    <li>Perdita di dati, profitti, reputazione, opportunità di business</li>
+    <li>Interruzioni del servizio, errori dell'AI, contenuti offensivi</li>
+    <li>Accessi non autorizzati, attacchi di sicurezza (salvo colpa diretta nostra)</li>
+    <li>Uso improprio del servizio, decisioni prese basandosi su output AI</li>
+  </ul>
+  <p>
 
-<li>
-<strong>PROPRIETÀ INTELLETTUALE</strong><br>
-Il software e i contenuti proprietari restano del titolare/licenzianti.
-</li>
+  </p>
+</div>
 
-<li>
-<strong>PRIVACY</strong><br>
-Il trattamento dei dati personali è disciplinato dalla Privacy Policy:
-<a href="privacy.html">Privacy Policy</a>
-</li>
+<div class="section">
+  <h2>9. Privacy e Dati</h2>
+  <p>
+    L'utilizzo di dati personali è regolato dalla nostra <a href="privacy.html">Privacy Policy</a>. 
+    Accettando questi Termini accetti anche la Privacy Policy. In caso di conflitto, la Privacy Policy prevale per questioni di protezione dati.
+  </p>
+</div>
 
-<li>
-<strong>CONTATTI</strong><br>
-<a href="mailto:officicial@mattedev.com">Segnalazioni o richieste</a>
-</li>
+<div class="section">
+  <h2>10. Violazioni e Sospensione Account</h2>
+  <p><strong>10.1 Conseguenze di Violazioni:</strong></p>
+  <ul>
+    <li>Violazioni di questi Termini possono risultare in:</li>
+    <ul style="margin-left: 40px;">
+      <li>Avvertimento scritto</li>
+      <li>Sospensione temporanea dell'account</li>
+      <li>Eliminazione permanente dell'account e dati associati</li>
+      <li>Azioni legali civili e penali (se applicabile)</li>
+    </ul>
+    <li>Sospensioni di sicurezza possono essere immediate senza preavviso</li>
+    <li>Non siamo tenuti a fornire backup dei dati eliminati</li>
+  </ul>
+  <p><strong>10.2 Ricorsi:</strong></p>
+  <ul>
+    <li>Puoi ricorrere all'eliminazione contattando: <a href="mailto:support@mattedev.com">support@mattedev.com</a></li>
+    <li>Valuteremo ricorsi in buona fede entro 30 giorni</li>
+    <li>La decisione è definitiva</li>
+  </ul>
+</div>
 
-</ol>
+<div class="section">
+  <h2>11. Modifiche al Servizio e Termini</h2>
+  <ul>
+    <li>Possiamo modificare, suspendere o terminare qualsiasi aspetto del servizio in qualunque momento</li>
+    <li>Notificheremo modifiche significative via email (dove possibile) con almeno 30 giorni di preavviso</li>
+    <li>L'uso continuato dopo modifiche significa accettazione dei nuovi Termini</li>
+    <li>La versione attuale dei Termini è sempre disponibile a questa pagina</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>12. Legge Applicabile e Competenza</h2>
+  <ul>
+    <li><strong>Legge:</strong> Questi Termini sono regolati dalla legge italiana (Codice Civile, Codice di Consumo)</li>
+    <li><strong>Competenza:</strong> Controversie saranno risolte dai tribunali italiani (competente quello del foro di domicilio del consumatore)</li>
+    <li><strong>Mediazione:</strong> Prima di azioni legali, incoraggiamo mediazione amichevole</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>13. Contatti</h2>
+  <p>Per domande, segnalazioni o ricorsi:</p>
+  <ul>
+    <li><strong>Email Generica:</strong> <a href="mailto:support@mattedev.com">support@mattedev.com</a></li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>14. Clausola di Salvaguardia</h2>
+  <p>
+    Se una parte di questi Termini risulta illegale o inapplicabile, quella parte sarà rimossa, 
+    ma il resto dei Termini rimane valido e vincolante.
+  </p>
+</div>
 
 </body>
 </html>

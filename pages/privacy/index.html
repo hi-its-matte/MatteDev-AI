@@ -3,14 +3,160 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat</title>
-  <link rel="stylesheet" href="/media/index.css">
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <title>Centro Privacy - MatteDev AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #131314;
+      --text1: #e3e3e3;
+      --text2: #9aa0a6;
+      --text3: #5f6368;
+      --accent: #8ab4f8;
+      --accent-bg: rgba(138, 180, 248, 0.12);
+      --surface: #1e1f20;
+      --surface2: #282a2c;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Google Sans', 'Roboto', sans-serif;
+      background: var(--bg);
+      color: var(--text1);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .privacy-container {
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .privacy-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .privacy-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .privacy-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text1);
+    }
+
+    .privacy-header p {
+      font-size: 16px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .privacy-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .privacy-card {
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .privacy-card:hover {
+      background: var(--surface2);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .privacy-card-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .privacy-card h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text1);
+    }
+
+    .privacy-card p {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    .privacy-footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text3);
+    }
+
+    .privacy-footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .privacy-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <p>Centro privacy</p>
-    <p>La tua privacy è importante per noi. In questa sezione, puoi scoprire come proteggiamo i tuoi dati.</p>
-    <button href="../privacy/privacy.html">Privacy Policy</button>
-    <button href="../privacy/terms.html">Termini di Servizio</button>
+  <div class="privacy-container">
+    <div class="privacy-header">
+      <div class="privacy-icon">🔒</div>
+      <h1>Centro Privacy</h1>
+      <p>La tua privacy è importante per noi. Scopri come proteggiamo i tuoi dati e quali sono i tuoi diritti.</p>
+    </div>
+
+    <div class="privacy-cards">
+      <a href="privacy.html" class="privacy-card">
+        <div class="privacy-card-icon">📋</div>
+        <h2>Privacy Policy</h2>
+        <p>Scopri come raccogliamo, usiamo e proteggiamo i tuoi dati personali. Informazioni su Firebase, Google Fonts, Gemini API e i tuoi diritti GDPR.</p>
+      </a>
+
+      <a href="terms.html" class="privacy-card">
+        <div class="privacy-card-icon">⚖️</div>
+        <h2>Termini di Servizio</h2>
+        <p>Leggi le regole d'uso di MatteDev AI. Scopri cosa puoi e non puoi fare, e le limitazioni di responsabilità.</p>
+      </a>
+    </div>
+
+    <div class="privacy-footer">
+      <p>Domande sulla tua privacy? Contattaci a <a href="mailto:privacy@mattedev.com">privacy@mattedev.com</a></p>
+    </div>
+  </div>
 </body>
 </html>

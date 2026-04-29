@@ -319,6 +319,30 @@ LOGIN PAGE
   text-underline-offset: 2px;
 }
 
+.privacy-notice {
+  margin-top: 24px;
+  padding: 12px 16px;
+  background: rgba(138, 180, 248, 0.08);
+  border: 1px solid rgba(138, 180, 248, 0.2);
+  border-radius: var(--r-md);
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.privacy-notice a {
+  color: #8ab4f8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--t-fast);
+}
+
+.privacy-notice a:hover {
+  color: #b3d5ff;
+  text-decoration: underline;
+}
+
 
 /* =====================================================
 STATUS SCREEN
