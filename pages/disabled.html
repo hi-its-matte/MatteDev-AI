@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account disabilitato</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ff0000;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+    }
+
+    .card {
+      background: hsl(0, 100%, 50%);
+    
+      border-radius: 16px;
+      padding: 48px 40px;
+      max-width: 460px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 52px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    p {
+      font-size: 14px;
+      color: #ffffff;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .email-link {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 12px 28px;
+      background: #fff;
+      color: #2f0000;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .email-link:hover { opacity: 0.85; }
+
+    .logout-btn {
+      display: block;
+      margin-top: 14px;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .logout-btn:hover { color: #ffffff; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="icon">🔒</div>
+    <h1>Account disabilitato</h1>
+    <p>Il tuo account è stato temporaneamente disabilitato.</p>
+    <p>Se pensi si tratti di un errore, contatta il supporto.</p>
+
+    <a class="email-link" href="mailto:support@mattedev.com">
+      ✉️ Contatta il supporto
+    </a>
+
+    <button class="logout-btn" onclick="logout()">Esci dall'account</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC7Tbqt5FzJK8Z_USkCMWxXiHZp8uRN26A",
+      authDomain: "mattedev-account.firebaseapp.com",
+      databaseURL: "https://mattedev-account-default-rtdb.firebaseio.com",
+      projectId: "mattedev-account",
+      storageBucket: "mattedev-account.firebasestorage.app",
+      messagingSenderId: "77268069903",
+      appId: "1:77268069903:web:040aa6c3981eb3650afd7a"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.logout = async () => {
+      await signOut(auth);
+      window.location.replace("/pages/login.html");
+    };
+  </script>
+
+</body>
+</html>
