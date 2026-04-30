@@ -7,6 +7,25 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+
+  <!-- PWA / iOS icon -->
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-120.png">
+
+<!-- Android / browser -->
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
+
+<!-- PWA manifest -->
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MatteDev AI">
+<meta name="theme-color" content="#131314">
+
+
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -863,16 +882,6 @@
 
 <!-- MAIN -->
 <main id="main">
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <button class="topbar-icon-btn topbar-hamburger" style="display:none" onclick="toggleSidebar()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-    </button>
-    <div style="flex:1"></div>
-    <button class="topbar-icon-btn" title="Account" id="topbar-user-btn">
-      <div class="user-pfp" id="user-pfp-topbar" style="width:32px;height:32px;font-size:13px;"></div>
-    </button>
-  </div>
 
   <!-- HERO -->
   <div id="hero">
@@ -1028,6 +1037,23 @@ onAuthStateChanged(auth, async user => {
     console.error("Errore controllo disabled:", e);
   }
 });
+
+
+  function toggleProfileMenu() {
+    const menu = document.getElementById("profile-menu");
+    menu.style.display = menu.style.display === "none" ? "block" : "none";
+  }
+
+  // Chiude il menu cliccando fuori
+  document.addEventListener("click", e => {
+    if (!e.target.closest("#topbar-user-btn") && !e.target.closest("#profile-menu")) {
+      const menu = document.getElementById("profile-menu");
+      if (menu) menu.style.display = "none";
+    }
+  });
+
+const menuName = document.getElementById("profile-menu-name");
+if (menuName) menuName.textContent = username;
 </script>
 </body>
 </html>
