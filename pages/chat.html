@@ -835,6 +835,14 @@
       #chat-container { padding: 16px; }
       .chat-input-area { padding: 8px 12px 12px; }
     }
+
+    @media (max-width: 768px) {
+  /* già presente, funzionerà correttamente */
+  .topbar-hamburger { display: flex !important; }
+  
+  /* aggiungi anche questo per la topbar */
+  .topbar { justify-content: space-between; }
+}
   </style>
 </head>
 <body>
@@ -882,7 +890,16 @@
 
 <!-- MAIN -->
 <main id="main">
-
+<div class="topbar">
+  <!-- Aggiungi questo bottone -->
+  <button class="topbar-icon-btn topbar-hamburger" onclick="toggleSidebar()" style="display:none;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+    </svg>
+  </button>
+  <!-- resto della topbar -->
+  <button class="upgrade-btn">...</button>
+</div>
   <!-- HERO -->
   <div id="hero">
     <div class="hero-text-block">
