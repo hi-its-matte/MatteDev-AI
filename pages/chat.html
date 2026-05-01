@@ -863,6 +863,44 @@
       #chat-container { padding: 16px; }
       .chat-input-area { padding: 8px 12px 12px; }
       .logout-btn span { display: none; }
+      .school-btn span { display: none; }
+
+      /* FIX touch area bottoni su mobile */
+      #send-btn,
+      #chat-send-btn {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+      }
+    }
+
+    /* FIX 2: tap più reattivo su tutti i bottoni interattivi */
+    #send-btn,
+    #chat-send-btn,
+    .logout-btn,
+    .school-btn,
+    .tool-btn,
+    .hamburger,
+    .new-chat-btn,
+    .nav-item,
+    .chip {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
+    }
+
+    /* FIX 3: toolbar sempre sopra, mai coperta da altri elementi */
+    .input-toolbar {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* FIX 4: input-hint non deve bloccare i tap sotto */
+    .input-hint {
+      pointer-events: none;
+    }
+    .input-hint a {
+      pointer-events: auto;
     }
   </style>
 
