@@ -66,6 +66,83 @@ if (typeof window.marked !== "undefined") {
   window.marked.setOptions({ breaks: true, gfm: true });
 }
 
+// ─────────────────────────────────────────────
+// RATE LIMITER
+// ─────────────────────────────────────────────
+
+const RateLimiter = {
+  MINUTE_LIMIT: 3,
+  DAY_LIMIT: 15,
+
+  _key() {
+    // Chiave per-utente: i limiti sono separati per ogni account
+    const uid = currentUser?.uid || "anonymous";
+    return `rl_${uid}`;
+  },
+
+  _load() {
+    try {
+      return JSON.parse(localStorage.getItem(this._key())) ?? { min: [], day: [] };
+    } catch { return { min: [], day: [] }; }
+  },
+
+  _save(data) {
+    localStorage.setItem(this._key(), JSON.stringify(data));
+  },
+
+  check() {
+    const now  = Date.now();
+    const data = this._load();
+
+    // Rimuovi timestamp scaduti
+    data.min = data.min.filter(t => now - t < 60_000);
+    data.day = data.day.filter(t => now - t < 86_400_000);
+
+    if (data.min.length >= this.MINUTE_LIMIT) {
+      const waitSec = Math.ceil((60_000 - (now - data.min[0])) / 1000);
+      return { ok: false, reason: `Troppi messaggi. Riprova tra ${waitSec} secondi.` };
+    }
+
+    if (data.day.length >= this.DAY_LIMIT) {
+      const waitH = Math.ceil((86_400_000 - (now - data.day[0])) / 3_600_000 * 10) / 10;
+      return { ok: false, reason: `Limite giornaliero di ${this.DAY_LIMIT} messaggi raggiunto. Riprova tra ${waitH}h.` };
+    }
+
+    // Registra il messaggio solo se i limiti non sono superati
+    data.min.push(now);
+    data.day.push(now);
+    this._save(data);
+    return { ok: true };
+  }
+};
+
+function showRateError(msg) {
+  // Mostra errore inline nel chat container (o nell'hero se la chat non è ancora aperta)
+  const container = document.getElementById("chat-container") || document.getElementById("hero");
+  if (!container) return;
+
+  // Evita di impilare più errori
+  document.getElementById("__rate_error__")?.remove();
+
+  const el = document.createElement("div");
+  el.id = "__rate_error__";
+  el.style.cssText = `
+    text-align: center;
+    color: #f28b82;
+    font-size: 13px;
+    padding: 10px 16px;
+    background: rgba(242,139,130,0.1);
+    border: 1px solid rgba(242,139,130,0.25);
+    border-radius: 12px;
+    margin: 8px auto;
+    max-width: 420px;
+    animation: msgIn 0.2s ease;
+  `;
+  el.textContent = "⚠️ " + msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 5000);
+}
+
 // ── Availability check ──
 async function redirectByAvailability() {
   try {
@@ -78,8 +155,6 @@ async function redirectByAvailability() {
 
 // ─────────────────────────────────────────────
 // FIRESTORE REFS
-// BUG FIX 1: chatHistoryColRef aveva 4 segmenti (pari) → aggiunto "data" come doc intermedio
-// users/{uid}/ai/data/chatHistory/{autoId}  ← ora 5 segmenti (dispari) ✅
 // ─────────────────────────────────────────────
 
 const userDocRef            = (uid)      => doc(db, "users", uid);
@@ -89,7 +164,6 @@ const messagesColRef        = (uid, cid) => collection(db, "users", uid, "ai", "
 const personalizationDocRef = (uid)      => doc(db, "users", uid, "ai", "personalization");
 const preferencesDocRef     = (uid)      => doc(db, "users", uid, "ai", "preferences");
 const contextMemoryDocRef   = (uid)      => doc(db, "users", uid, "ai", "contextMemory");
-// FIX BUG 1: era collection(db, "users", uid, "ai", "chatHistory") → 4 segmenti INVALIDI
 const chatHistoryColRef     = (uid)      => collection(db, "users", uid, "ai", "data", "chatHistory");
 
 // ─────────────────────────────────────────────
@@ -176,7 +250,6 @@ async function ensureAiDocuments(uid) {
   const now = serverTimestamp();
   await Promise.all([
     setDoc(doc(db, "users", uid, "ai", "meta"),  { createdAt: now, updatedAt: now }, { merge: true }),
-    // FIX BUG 1: serve anche il doc "data" come intermedio per chatHistoryColRef
     setDoc(doc(db, "users", uid, "ai", "data"),  { createdAt: now }, { merge: true }),
     setDoc(contextMemoryDocRef(uid),             { note: "", facts: [], updatedAt: now }, { merge: true }),
     setDoc(personalizationDocRef(uid),           { aiStyle: "normal", aiTone: "balanced", updatedAt: now }, { merge: true }),
@@ -361,7 +434,6 @@ async function updatePersistentMemory(userMessage, aiMessage) {
       updatedAt: serverTimestamp()
     }, { merge: true }),
 
-    // FIX BUG 1: chatHistoryColRef ora punta a path valido con 5 segmenti
     addDoc(chatHistoryColRef(currentUser.uid), {
       chatId:    activeChatId,
       timestamp: getCurrentIsoDate(),
@@ -453,6 +525,13 @@ function autoResize(el) {
 async function sendMessage(message) {
   if (!currentUser || !message.trim() || isSending) return;
 
+  // ── RATE LIMIT CHECK ──
+  const rl = RateLimiter.check();
+  if (!rl.ok) {
+    showRateError(rl.reason);
+    return;
+  }
+
   if (!activeChatId) {
     activeChatId = await createChat(message);
     if (!activeChatId) return;
@@ -471,7 +550,6 @@ async function sendMessage(message) {
   const controller = new AbortController();
   const timerId    = setTimeout(() => controller.abort(), 20000);
 
-  // FIX BUG 2: salva subito il messaggio utente su Firestore
   await appendMessageToFirestore(activeChatId, "user", message);
 
   try {
