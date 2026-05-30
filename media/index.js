@@ -25,6 +25,8 @@ import {
 
 const DEFAULT_PROXY_URL = "https://ai.api.mattedev.com/chat";
 const PROXY_URL = window.__CHAT_API_URL__ || DEFAULT_PROXY_URL;
+const MIN_LOGIN_OVERLAY_MS = 3500;
+const loginOverlayStartedAt = Date.now();
 let isSending = false;
 
 const firebaseConfig = {
@@ -55,6 +57,7 @@ const ALLOWED_MODELS = new Set([
   'gemma-3-12b-it',
   'gemma-3-27b-it'
 ]);
+const DEFAULT_MODEL = 'gemini-3.1-flash-lite-preview';
 
 let userMemory = {
   contextMemory:   { facts: [], note: "" },
@@ -82,7 +85,11 @@ const RateLimiter = {
 
   _load() {
     try {
-      return JSON.parse(localStorage.getItem(this._key())) ?? { min: [], day: [] };
+      const parsed = JSON.parse(localStorage.getItem(this._key()));
+      return {
+        min: Array.isArray(parsed?.min) ? parsed.min : [],
+        day: Array.isArray(parsed?.day) ? parsed.day : []
+      };
     } catch { return { min: [], day: [] }; }
   },
 
@@ -90,35 +97,46 @@ const RateLimiter = {
     localStorage.setItem(this._key(), JSON.stringify(data));
   },
 
+  _clean(data, now = Date.now()) {
+    data.min = data.min.filter(t => Number.isFinite(t) && now - t < 60_000);
+    data.day = data.day.filter(t => Number.isFinite(t) && now - t < 86_400_000);
+    return data;
+  },
+
   check() {
     const now  = Date.now();
-    const data = this._load();
-
-    // Rimuovi timestamp scaduti
-    data.min = data.min.filter(t => now - t < 60_000);
-    data.day = data.day.filter(t => now - t < 86_400_000);
+    const data = this._clean(this._load(), now);
 
     if (data.min.length >= this.MINUTE_LIMIT) {
       const waitSec = Math.ceil((60_000 - (now - data.min[0])) / 1000);
+      this._save(data);
       return { ok: false, reason: `Troppi messaggi. Riprova tra ${waitSec} secondi.` };
     }
 
     if (data.day.length >= this.DAY_LIMIT) {
       const waitH = Math.ceil((86_400_000 - (now - data.day[0])) / 3_600_000 * 10) / 10;
+      this._save(data);
       return { ok: false, reason: `Limite giornaliero di ${this.DAY_LIMIT} messaggi raggiunto. Riprova tra ${waitH}h.` };
     }
 
-    // Registra il messaggio solo se i limiti non sono superati
+    this._save(data);
+    return { ok: true };
+  },
+
+  commit() {
+    const now = Date.now();
+    const data = this._clean(this._load(), now);
     data.min.push(now);
     data.day.push(now);
     this._save(data);
-    return { ok: true };
   }
 };
 
 function showRateError(msg) {
   // Mostra errore inline nel chat container (o nell'hero se la chat non è ancora aperta)
-  const container = document.getElementById("chat-container") || document.getElementById("hero");
+  const hero = document.getElementById("hero");
+  const chat = document.getElementById("chat-container");
+  const container = hero && !hero.classList.contains("hidden") ? hero : chat;
   if (!container) return;
 
   // Evita di impilare più errori
@@ -467,6 +485,20 @@ function scrollToBottom() {
   if (c) c.scrollTop = c.scrollHeight;
 }
 
+function hideLoginOverlay() {
+  const overlay = document.getElementById("login-loading-overlay");
+  if (!overlay) return;
+
+  const elapsed = Date.now() - loginOverlayStartedAt;
+  const wait = Math.max(0, MIN_LOGIN_OVERLAY_MS - elapsed);
+
+  setTimeout(() => {
+    overlay.classList.add("hidden");
+    document.body.classList.remove("is-loading");
+    setTimeout(() => overlay.remove(), 450);
+  }, wait);
+}
+
 function appendMessage(role, text) {
   const container = document.getElementById("chat-container");
   if (!container) return null;
@@ -537,6 +569,8 @@ async function sendMessage(message) {
     if (!activeChatId) return;
   }
 
+  RateLimiter.commit();
+
   isSending = true;
   hideHero();
   appendMessage("user", message);
@@ -545,7 +579,7 @@ async function sendMessage(message) {
   const modelDropdown = document.getElementById("ai-model");
   const selectedModel = (modelDropdown && ALLOWED_MODELS.has(modelDropdown.value))
     ? modelDropdown.value
-    : "gemini-2.5-flash-lite-preview-06-17";
+    : DEFAULT_MODEL;
 
   const controller = new AbortController();
   const timerId    = setTimeout(() => controller.abort(), 20000);
@@ -683,6 +717,7 @@ window.logout = async function () {
   await signOut(auth);
   window.location.href = "login.html";
 };
+window.handleLogout = window.logout;
 
 // ─────────────────────────────────────────────
 // KEYBOARD & INPUT LISTENERS
@@ -706,7 +741,10 @@ document.addEventListener("DOMContentLoaded", () => {
     sendBtn?.classList.toggle("active", userInput.value.trim().length > 0);
   });
 
-  chatInput?.addEventListener("input", () => autoResize(chatInput));
+  chatInput?.addEventListener("input", () => {
+    autoResize(chatInput);
+    document.getElementById("chat-send-btn")?.classList.toggle("active", chatInput.value.trim().length > 0);
+  });
 
   if (window.innerWidth <= 768) {
     document.querySelector(".topbar-hamburger")?.style.setProperty("display", "flex");
@@ -741,6 +779,7 @@ onAuthStateChanged(auth, async user => {
       activeChatId = snap.docs[0].id;
       await loadChatMessages(activeChatId);
       await loadChats();
+      hideLoginOverlay();
       return;
     }
   } catch (e) {
@@ -748,4 +787,5 @@ onAuthStateChanged(auth, async user => {
   }
 
   await createNewChatFlow();
+  hideLoginOverlay();
 });
