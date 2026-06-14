@@ -23,7 +23,7 @@ import {
   get
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const DEFAULT_PROXY_URL = "https://ai.api.mattedev.com/chat";
+const DEFAULT_PROXY_URL = "https://ai-api.mattedev.com/chat";
 const PROXY_URL = window.__CHAT_API_URL__ || DEFAULT_PROXY_URL;
 const MIN_LOGIN_OVERLAY_MS = 3500;
 const loginOverlayStartedAt = Date.now();
