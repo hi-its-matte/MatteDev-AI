@@ -97,8 +97,7 @@ body.disabled-page {
   overflow: auto;
 }
 
-body.chat-page,
-body.school-mode {
+body.chat-page {
   display: flex;
   min-height: 100dvh;
 }
@@ -107,13 +106,6 @@ body.login-page,
 body.status-page,
 body.disabled-page {
   display: block;
-}
-
-body.school-mode {
-  --accent: #fb923c;
-  --accent-strong: #fdba74;
-  --accent-soft: rgba(251, 146, 60, 0.16);
-  --accent-ink: #1f1205;
 }
 
 button,
@@ -348,6 +340,17 @@ select:focus-visible {
 #sidebar:not(.expanded) .user-name-text,
 #sidebar:not(.expanded) .nav-section-label {
   display: none;
+}
+
+#sidebar:not(.expanded) .nav-item,
+#sidebar:not(.expanded) .user-btn {
+  justify-content: center;
+  padding: 0;
+}
+
+#sidebar:not(.expanded) .nav-item .nav-icon,
+#sidebar:not(.expanded) .user-btn .user-pfp {
+  margin: 0;
 }
 
 #sidebar:not(.expanded) .sidebar-nav {
@@ -1376,43 +1379,6 @@ textarea#memory-note {
   min-height: 110px;
 }
 
-body.school-mode .sidebar-logo,
-body.school-mode .hero-title,
-body.school-mode .topbar-title {
-  letter-spacing: -0.05em;
-}
-
-body.school-mode .user-pfp {
-  border-color: rgba(251, 146, 60, 0.42);
-  background: linear-gradient(135deg, rgba(251, 146, 60, 0.2), rgba(255, 255, 255, 0.04));
-}
-
-body.school-mode .school-btn {
-  background: var(--accent-soft);
-  color: var(--text-1);
-  border-color: rgba(251, 146, 60, 0.24);
-}
-
-body.school-mode .school-btn:hover {
-  background: rgba(251, 146, 60, 0.24);
-}
-
-body.school-mode .ai-avatar {
-  background: rgba(251, 146, 60, 0.12);
-  border-color: rgba(251, 146, 60, 0.24);
-}
-
-body.school-mode .msg-bubble {
-  border-color: rgba(251, 146, 60, 0.14);
-}
-
-body.school-mode .user-wrapper .msg-bubble {
-  background: linear-gradient(135deg, #fff4e8, #ffe7cf);
-}
-
-body.school-mode .typing-indicator span {
-  background: rgba(251, 146, 60, 0.75);
-}
 
 .disabled-page .disabled-shell {
   min-height: 100dvh;

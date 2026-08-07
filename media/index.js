@@ -25,7 +25,7 @@ import {
 
 const DEFAULT_PROXY_URL = "https://ai-api.mattedev.com/chat";
 const PROXY_URL = window.__CHAT_API_URL__ || DEFAULT_PROXY_URL;
-const MIN_LOGIN_OVERLAY_MS = 3500;
+const MIN_LOGIN_OVERLAY_MS = 0;
 const loginOverlayStartedAt = Date.now();
 let isSending = false;
 
@@ -772,20 +772,6 @@ onAuthStateChanged(auth, async user => {
     loadUserProfile(user.uid)
   ]);
   await loadChats();
-
-  try {
-    const snap = await getDocs(query(chatsColRef(user.uid), orderBy("updatedAt", "desc"), limit(1)));
-    if (!snap.empty) {
-      activeChatId = snap.docs[0].id;
-      await loadChatMessages(activeChatId);
-      await loadChats();
-      hideLoginOverlay();
-      return;
-    }
-  } catch (e) {
-    console.error("Errore caricamento ultima chat:", e);
-  }
-
-  await createNewChatFlow();
+  showHero();
   hideLoginOverlay();
 });
