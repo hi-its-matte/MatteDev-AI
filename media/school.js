@@ -692,9 +692,13 @@ window.deleteAllChats = async function () {
   closeSettings();
 };
 
-window.logout = async function () {
+window.handleLogout = async function () {
   await signOut(auth);
-  window.location.href = "login.html";
+  window.location.href = "/pages/login.html";
+};
+
+window.logout = async function () {
+  await window.handleLogout();
 };
 
 // ─────────────────────────────────────────────
@@ -722,7 +726,7 @@ document.addEventListener("DOMContentLoaded", () => {
   chatInput?.addEventListener("input", () => autoResize(chatInput));
 
   if (window.innerWidth <= 768) {
-    document.querySelector(".topbar-hamburger")?.style.setProperty("display", "flex");
+    document.querySelector(".topbar-hamburger")?.style.setProperty("display", "grid");
   }
 });
 

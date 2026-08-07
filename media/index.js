@@ -747,7 +747,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (window.innerWidth <= 768) {
-    document.querySelector(".topbar-hamburger")?.style.setProperty("display", "flex");
+    document.querySelector(".topbar-hamburger")?.style.setProperty("display", "grid");
   }
 });
 

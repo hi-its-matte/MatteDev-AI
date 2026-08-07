@@ -3,836 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MatteDev AI</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>MatteDev AI - School Mode</title>
+  <link rel="stylesheet" href="../media/index.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --bg: #131314;
-      --sidebar-bg: #1e1f20;
-      --surface: #1e1f20;
-      --surface2: #282a2c;
-      --surface3: #303134;
-      --border: rgba(255,255,255,0.08);
-      --text1: #e3e3e3;
-      --text2: #9aa0a6;
-      --text3: #5f6368;
-      --accent: #8ab4f8;
-      --accent-bg: rgba(138,180,248,0.12);
-      --chip-bg: #282a2c;
-      --chip-hover: #303134;
-      --input-bg: #282a2c;
-      --send-bg: #8ab4f8;
-      --send-color: #202124;
-      --r-sm: 8px;
-      --r-md: 12px;
-      --r-lg: 16px;
-      --r-xl: 24px;
-      --r-full: 9999px;
-      --sidebar-w: 256px;
-      --sidebar-collapsed: 72px;
-      --t: 200ms cubic-bezier(0.4,0,0.2,1);
-    }
-
-    html, body { height: 100%; }
-
-    body {
-      font-family: 'Google Sans', 'Roboto', sans-serif;
-      background: var(--bg);
-      color: var(--text1);
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* ── SIDEBAR ── */
-    #sidebar {
-      width: var(--sidebar-collapsed);
-      height: 100vh;
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 8px 0;
-      flex-shrink: 0;
-      transition: width var(--t);
-      overflow: hidden;
-      position: relative;
-      z-index: 50;
-    }
-
-    #sidebar.expanded {
-      width: var(--sidebar-w);
-      background: var(--sidebar-bg);
-      align-items: stretch;
-    }
-
-    .sidebar-top {
-      display: flex;
-      align-items: center;
-      padding: 8px 12px;
-      gap: 12px;
-      width: 100%;
-      flex-shrink: 0;
-      min-height: 56px;
-    }
-
-    .hamburger {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--r-full);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text2);
-      font-size: 20px;
-      transition: background var(--t);
-      flex-shrink: 0;
-    }
-    .hamburger:hover { background: var(--surface2); }
-
-    .sidebar-logo {
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--text1);
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity var(--t);
-    }
-    #sidebar.expanded .sidebar-logo { opacity: 1; }
-
-    /* FIX: nasconde tutto il testo quando la sidebar è collassata */
-    #sidebar:not(.expanded) .sidebar-logo,
-    #sidebar:not(.expanded) .new-chat-label,
-    #sidebar:not(.expanded) .nav-section-label,
-    #sidebar:not(.expanded) .nav-label,
-    #sidebar:not(.expanded) .history-item-text,
-    #sidebar:not(.expanded) .user-name-text {
-      display: none;
-    }
-
-    /* FIX: nasconde tutta la cronologia quando collassata */
-    #sidebar:not(.expanded) .sidebar-nav {
-      display: none;
-    }
-
-    /* new chat btn */
-    .new-chat-wrap {
-      padding: 8px 12px;
-      width: 100%;
-      flex-shrink: 0;
-    }
-
-    .new-chat-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 12px;
-      height: 48px;
-      border-radius: var(--r-full);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: var(--text1);
-      font-size: 14px;
-      font-weight: 500;
-      font-family: inherit;
-      transition: background var(--t);
-      width: 100%;
-      justify-content: center;
-    }
-    #sidebar.expanded .new-chat-btn { justify-content: flex-start; }
-    .new-chat-btn:hover { background: var(--surface2); }
-    .new-chat-icon { font-size: 20px; flex-shrink: 0; }
-    .new-chat-label {
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity var(--t);
-    }
-    #sidebar.expanded .new-chat-label { opacity: 1; }
-
-    /* nav items */
-    .sidebar-nav {
-      flex: 1;
-      overflow-y: auto;
-      width: 100%;
-      padding: 0 12px;
-    }
-    .sidebar-nav::-webkit-scrollbar { display: none; }
-
-    .nav-section-label {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text3);
-      padding: 16px 12px 6px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity var(--t);
-    }
-    #sidebar.expanded .nav-section-label { opacity: 1; }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 12px;
-      height: 44px;
-      border-radius: var(--r-full);
-      cursor: pointer;
-      color: var(--text2);
-      font-size: 14px;
-      font-weight: 400;
-      transition: background var(--t);
-      white-space: nowrap;
-      justify-content: center;
-      border: none;
-      background: transparent;
-      font-family: inherit;
-      width: 100%;
-      text-align: left;
-    }
-    #sidebar.expanded .nav-item { justify-content: flex-start; }
-    .nav-item:hover { background: var(--surface2); color: var(--text1); }
-    .nav-item.active { background: var(--accent-bg); color: var(--accent); }
-    .nav-icon { font-size: 18px; flex-shrink: 0; }
-    .nav-label {
-      opacity: 0;
-      transition: opacity var(--t);
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    #sidebar.expanded .nav-label { opacity: 1; }
-
-    /* history list */
-    .history-section {
-      padding: 0 12px;
-      overflow: hidden;
-    }
-    .history-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 12px;
-      height: 40px;
-      border-radius: var(--r-full);
-      cursor: pointer;
-      color: var(--text2);
-      font-size: 13px;
-      transition: background var(--t);
-      border: none;
-      background: transparent;
-      font-family: inherit;
-      width: 100%;
-      text-align: left;
-    }
-    .history-item:hover { background: var(--surface2); color: var(--text1); }
-    .history-item-text {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity var(--t);
-    }
-    #sidebar.expanded .history-item-text { opacity: 1; }
-
-    /* sidebar bottom */
-    .sidebar-bottom {
-      padding: 8px 12px 16px;
-      width: 100%;
-      flex-shrink: 0;
-    }
-
-    .sidebar-bottom .nav-item { margin: 0; }
-
-    .user-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 12px;
-      border-radius: var(--r-full);
-      cursor: pointer;
-      transition: background var(--t);
-      border: none;
-      background: transparent;
-      font-family: inherit;
-      width: 100%;
-      justify-content: center;
-    }
-    #sidebar.expanded .user-btn { justify-content: flex-start; }
-    .user-btn:hover { background: var(--surface2); }
-
-    .user-pfp {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--accent-bg);
-      border: 2px solid var(--accent);
-      object-fit: cover;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--accent);
-      overflow: hidden;
-    }
-    .user-pfp img { width: 100%; height: 100%; object-fit: cover; }
-
-    .user-name-text {
-      font-size: 14px;
-      color: var(--text1);
-      font-weight: 500;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity var(--t);
-    }
-    #sidebar.expanded .user-name-text { opacity: 1; }
-
-    /* ── MAIN ── */
-    #main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* topbar */
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 8px 16px;
-      height: 64px;
-      flex-shrink: 0;
-      gap: 8px;
-    }
-
-    .upgrade-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: var(--r-full);
-      background: var(--accent);
-      color: var(--send-color);
-      font-size: 14px;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-      transition: opacity var(--t);
-    }
-    .upgrade-btn:hover { opacity: 0.9; }
-
-    .topbar-icon-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--r-full);
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text2);
-      font-size: 18px;
-      transition: background var(--t);
-      font-family: inherit;
-    }
-    .topbar-icon-btn:hover { background: var(--surface2); }
-
-    /* ── HERO ── */
-    #hero {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 24px;
-      gap: 32px;
-      overflow-y: auto;
-    }
-
-    #hero.hidden { display: none; }
-
-    .hero-greeting {
-      font-size: 13px;
-      color: var(--text2);
-      font-weight: 400;
-    }
-
-    .hero-title {
-      font-size: clamp(32px, 5vw, 48px);
-      font-weight: 400;
-      color: var(--text1);
-      text-align: center;
-      line-height: 1.15;
-      letter-spacing: -0.5px;
-    }
-
-    .hero-text-block {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* chips */
-    .chips-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      max-width: 720px;
-    }
-
-    .chip {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: var(--r-full);
-      background: var(--chip-bg);
-      border: 1px solid var(--border);
-      color: var(--text1);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background var(--t);
-    }
-    .chip:hover { background: var(--chip-hover); }
-
-    /* ── INPUT BOX ── */
-    .input-section {
-      width: 100%;
-      max-width: 720px;
-    }
-
-    .input-box {
-      background: var(--surface2);
-      border-radius: var(--r-xl);
-      padding: 16px 16px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border: 1px solid var(--border);
-      transition: border-color var(--t), background var(--t);
-    }
-    .input-box:focus-within { border-color: var(--accent); background: var(--surface3); }
-
-    #user-input {
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text1);
-      font-size: 16px;
-      font-family: 'Google Sans', 'Roboto', sans-serif;
-      resize: none;
-      min-height: 24px;
-      max-height: 200px;
-      width: 100%;
-      line-height: 1.5;
-    }
-    #user-input::placeholder { color: var(--text3); }
-
-    .input-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .input-tools-left {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .tool-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: var(--r-full);
-      border: none;
-      background: transparent;
-      color: var(--text2);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background var(--t);
-    }
-    .tool-btn:hover { background: var(--surface3); color: var(--text1); }
-    .tool-btn-icon { font-size: 16px; }
-
-    .input-tools-right {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .speed-btn {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 12px;
-      border-radius: var(--r-full);
-      border: none;
-      background: transparent;
-      color: var(--text2);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background var(--t);
-    }
-    .speed-btn:hover { background: var(--surface3); }
-
-    /* send button hero e chat con stile identico */
-    #send-btn,
-    #chat-send-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--r-full);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text2);
-      font-size: 18px;
-      transition: background var(--t), color var(--t), border-color var(--t);
-    }
-    #send-btn.active,
-    #chat-send-btn.active {
-      background: var(--accent);
-      color: var(--send-color);
-      border-color: var(--accent);
-    }
-    #send-btn:hover,
-    #chat-send-btn:hover { background: var(--surface3); }
-
-    .input-hint {
-      font-size: 12px;
-      color: var(--text3);
-      text-align: center;
-      padding: 8px 0 0;
-    }
-
-    /* ── CHAT VIEW ── */
-    #chat-view {
-      flex: 1;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    #chat-view.visible { display: flex; }
-
-    #chat-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px max(24px, calc(50% - 360px));
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    #chat-container::-webkit-scrollbar { width: 6px; }
-    #chat-container::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
-
-    .msg-wrapper { display: flex; width: 100%; animation: msgIn 0.2s ease; }
-    .user-wrapper { justify-content: flex-end; }
-    .ai-wrapper { justify-content: flex-start; align-items: flex-start; gap: 12px; }
-
-    .ai-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      margin-top: 4px;
-    }
-
-    .msg-bubble {
-      max-width: 72%;
-      padding: 12px 16px;
-      border-radius: var(--r-xl);
-      font-size: 15px;
-      line-height: 1.65;
-    }
-
-    .user-wrapper .msg-bubble {
-      background: var(--surface2);
-      color: var(--text1);
-      border-bottom-right-radius: 4px;
-    }
-
-    .ai-wrapper .msg-bubble {
-      background: transparent;
-      color: var(--text1);
-      padding-left: 0;
-    }
-
-    .typing-indicator {
-      display: flex;
-      gap: 5px;
-      padding: 16px 0;
-    }
-    .typing-indicator span {
-      width: 7px; height: 7px;
-      background: var(--text3);
-      border-radius: 50%;
-      animation: bounce 1.2s ease infinite;
-    }
-    .typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
-    .typing-indicator span:nth-child(3) { animation-delay: 0.30s; }
-
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-5px); opacity: 1; }
-    }
-
-    /* chat input area */
-    .chat-input-area {
-      padding: 12px max(24px, calc(50% - 360px)) 16px;
-      flex-shrink: 0;
-    }
-
-    .chat-input-area .input-box {
-      border-radius: var(--r-xl);
-      padding: 16px 16px 12px;
-      gap: 12px;
-    }
-
-    #chat-input {
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text1);
-      font-size: 16px;
-      font-family: 'Google Sans', 'Roboto', sans-serif;
-      resize: none;
-      min-height: 24px;
-      max-height: 200px;
-      width: 100%;
-      line-height: 1.5;
-    }
-    #chat-input::placeholder { color: var(--text3); }
-
-    @keyframes msgIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── MODAL ── */
-    .modal {
-      position: fixed; inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(6px);
-      z-index: 200;
-      padding: 24px;
-    }
-    .modal.open { display: flex; }
-
-    .modal-panel {
-      width: min(520px, 100%);
-      background: #282a2c;
-      border: 1px solid var(--border);
-      border-radius: var(--r-xl);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      max-height: calc(100vh - 48px);
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .modal-header h3 { font-size: 16px; font-weight: 500; }
-
-    .modal-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .settings-section {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text1);
-      margin-bottom: 4px;
-    }
-
-    .option-hint,
-    .memory-hint,
-    .danger-hint {
-      font-size: 12px;
-      color: var(--text3);
-      margin: -8px 0 8px 0;
-      line-height: 1.4;
-    }
-
-    .memory-hint {
-      margin-top: 8px;
-      padding: 8px 12px;
-      background: rgba(138, 180, 248, 0.08);
-      border-left: 2px solid var(--accent);
-      border-radius: 4px;
-    }
-
-    .danger-hint {
-      margin-top: 8px;
-      padding: 8px 12px;
-      background: rgba(244, 67, 54, 0.08);
-      border-left: 2px solid #f44336;
-      border-radius: 4px;
-      color: var(--text3);
-    }
-
-    .modal-body label {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text2);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .modal-body select,
-    .modal-body textarea,
-    .modal-body input[type="text"] {
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: var(--r-md);
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text1);
-      font-size: 14px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color var(--t);
-    }
-    .modal-body select:focus,
-    .modal-body textarea:focus { border-color: var(--accent); }
-    .modal-body select option { background: #282a2c; }
-    .modal-body textarea { resize: vertical; min-height: 88px; line-height: 1.5; }
-
-    .modal-actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-      padding: 16px 24px 20px;
-      border-top: 1px solid var(--border);
-    }
-
-    .modal-actions button {
-      padding: 10px 20px;
-      border-radius: var(--r-full);
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      font-family: inherit;
-      background: var(--surface3);
-      color: var(--text1);
-      transition: background var(--t);
-    }
-    .modal-actions button:hover { background: var(--surface2); }
-    .modal-actions .btn-primary {
-      background: var(--accent);
-      color: var(--send-color);
-    }
-    .modal-actions .btn-primary:hover { opacity: 0.9; }
-
-    .btn-danger {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: var(--r-md);
-      border: none;
-      background: rgba(220,53,69,0.15);
-      color: #f28b82;
-      font-size: 14px;
-      font-family: inherit;
-      cursor: pointer;
-      width: 100%;
-      transition: background var(--t);
-    }
-    .btn-danger:hover { background: rgba(220,53,69,0.25); }
-
-    .pre-release-note {
-      font-size: 12px;
-      color: #f28b82;
-      padding: 8px 12px;
-      background: rgba(220,53,69,0.08);
-      border-radius: var(--r-sm);
-      border: 1px solid rgba(220,53,69,0.2);
-    }
-
-    /* mobile */
-    @media (max-width: 768px) {
-      #sidebar { position: fixed; z-index: 100; }
-      #sidebar:not(.expanded) { width: 0; overflow: hidden; }
-      #sidebar.expanded { width: var(--sidebar-w); box-shadow: 4px 0 24px rgba(0,0,0,0.5); }
-      #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
-      #sidebar-overlay.open { display: block; }
-      .topbar { justify-content: space-between; }
-      .topbar-hamburger { display: flex !important; }
-      .upgrade-btn span { display: none; }
-      #hero { padding: 24px 16px; }
-      .chips-row { gap: 8px; }
-      .chip { font-size: 13px; padding: 9px 16px; }
-      #chat-container { padding: 16px; }
-      .chat-input-area { padding: 8px 12px 12px; }
-    }
-  </style>
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-120.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MatteDev AI">
+  <meta name="theme-color" content="#0a1220">
 </head>
-<body>
-
+<body class="chat-page school-mode">
 <div id="sidebar-overlay" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR -->
 <aside id="sidebar">
   <div class="sidebar-top">
-    <button class="hamburger" onclick="toggleSidebar()" title="Menu">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    <button class="hamburger" onclick="toggleSidebar()" title="Menu" aria-label="Apri menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
     </button>
-    <span class="sidebar-logo">MatteDev AI</span>
+    <span class="sidebar-logo">School Mode</span>
   </div>
 
   <div class="new-chat-wrap">
     <button class="new-chat-btn" onclick="newChat()">
-      <span class="new-chat-icon">
+      <span class="new-chat-icon" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm2.92-.92 9.06-9.06.92.92-9.06 9.06-.92-.92zM20.71 7c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
       </span>
       <span class="new-chat-label">Nuova chat</span>
@@ -845,44 +43,47 @@
   </nav>
 
   <div class="sidebar-bottom">
-    <button class="nav-item" onclick="">
-      <span class="nav-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
-      </span>
-      <span class="nav-label">Attività</span>
-    </button>
     <button class="nav-item" onclick="openSettings()">
-      <span class="nav-icon">
+      <span class="nav-icon" aria-hidden="true">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
       </span>
       <span class="nav-label">Impostazioni</span>
     </button>
 
+    <button class="nav-item" onclick="window.location.href='/pages/chat.html'">
+      <span class="nav-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v2H8.41L13 9.59 11.59 11 7 6.41V10H5V3h7zm7 18H5c-1.1 0-2-.9-2-2V8h2v11h14V5h-8V3h8c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2z"/></svg>
+      </span>
+      <span class="nav-label">Modalita classica</span>
+    </button>
+
+    <button class="logout-btn" onclick="handleLogout()" title="Esci dall'account">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+      <span>Logout</span>
+    </button>
+
     <button class="user-btn" id="user-btn">
-      <div class="user-pfp" id="user-pfp-sidebar">M</div>
+      <div class="user-pfp" id="user-pfp-sidebar"></div>
       <span class="user-name-text" id="user-name-sidebar">Utente</span>
     </button>
   </div>
 </aside>
 
-<!-- MAIN -->
 <main id="main">
-  <!-- TOPBAR -->
   <div class="topbar">
-    <button class="topbar-icon-btn topbar-hamburger" style="display:none" onclick="toggleSidebar()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    <button class="topbar-icon-btn topbar-hamburger" onclick="toggleSidebar()" aria-label="Apri menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
     </button>
     <div style="flex:1"></div>
-    <button class="topbar-icon-btn" title="Account" id="topbar-user-btn">
-      <div class="user-pfp" id="user-pfp-topbar" style="width:32px;height:32px;font-size:13px;">M</div>
+    <button class="topbar-icon-btn" title="Account" id="topbar-user-btn" onclick="openSettings()">
+      <div class="user-pfp" id="user-pfp-topbar">M</div>
     </button>
   </div>
 
-  <!-- HERO -->
   <div id="hero">
     <div class="hero-text-block">
       <p class="hero-greeting" id="hero-greeting">Ciao, Utente</p>
-      <h1 class="hero-title">Da dove iniziamo?</h1>
+      <h1 class="hero-title">Studiamo insieme.</h1>
     </div>
 
     <div class="input-section">
@@ -890,19 +91,22 @@
         <textarea id="user-input" rows="1" placeholder="Chiedi a MatteDev AI"></textarea>
         <div class="input-toolbar">
           <div class="input-tools-left">
-            <button id="send-btn" onclick="handleSend()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <button id="send-btn" onclick="handleSend()" aria-label="Invia messaggio">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
             </button>
           </div>
           <div class="input-tools-right">
+            <button class="school-btn" onclick="window.location.href='/pages/chat.html'">
+              <span aria-hidden="true">💬</span>
+              <span>Modalita classica</span>
+            </button>
           </div>
         </div>
       </div>
-      <p class="input-hint">MatteDev AI può commettere errori</p>
+      <p class="input-hint">Modalita scuola: guidiamo il ragionamento, non i compiti. <a href="https://privacy.mattedev.com">Centro Privacy</a></p>
     </div>
   </div>
 
-  <!-- CHAT VIEW -->
   <div id="chat-view">
     <div id="chat-container"></div>
     <div class="chat-input-area">
@@ -910,40 +114,33 @@
         <textarea id="chat-input" rows="1" placeholder="Chiedi a MatteDev AI"></textarea>
         <div class="input-toolbar">
           <div class="input-tools-left">
-            <button id="chat-send-btn" onclick="handleChatSend()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <button id="chat-send-btn" onclick="handleChatSend()" aria-label="Invia messaggio">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
             </button>
           </div>
           <div class="input-tools-right">
             <button class="tool-btn" onclick="openSettings()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="opacity:.7"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="opacity:.75" aria-hidden="true"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
               Strumenti
             </button>
-            <button onclick="window.location.href='/pages/chat.html'">
-  Modalità classica
-</button>
           </div>
         </div>
       </div>
-      <p class="input-hint">MatteDev AI può commettere errori</p>
+      <p class="input-hint">Modalita scuola: guidiamo il ragionamento, non i compiti. <a href="https://privacy.mattedev.com">Centro Privacy</a></p>
     </div>
   </div>
 </main>
 
-<!-- SETTINGS MODAL -->
 <div id="settings-modal" class="modal">
   <div class="modal-panel">
     <div class="modal-header">
       <h3>⚙️ Impostazioni AI</h3>
-      <button class="topbar-icon-btn" onclick="closeSettings()">✕</button>
+      <button class="topbar-icon-btn" onclick="closeSettings()" aria-label="Chiudi impostazioni">✕</button>
     </div>
     <div class="modal-body">
-
-      <!-- SEZIONE STILE E TONO -->
       <div class="settings-section">
         <h4 class="section-title">🎨 Stile e Tono</h4>
-
-        <label>Stile di risposta</label>
+        <label for="ai-style">Stile di risposta</label>
         <p class="option-hint">Come vuoi che l'AI formuli le risposte</p>
         <select id="ai-style">
           <option value="normal">📝 Normale - equilibrato e completo</option>
@@ -951,37 +148,33 @@
           <option value="detailed">📚 Dettagliato - approfondito e ricco</option>
         </select>
 
-        <label style="margin-top: 16px;">Tono della conversazione</label>
+        <label for="ai-tone" style="margin-top: 16px;">Tono della conversazione</label>
         <p class="option-hint">Il tipo di approccio comunicativo</p>
         <select id="ai-tone">
           <option value="balanced">⚖️ Bilanciato - neutrale e oggettivo</option>
           <option value="friendly">😊 Amichevole - caldo e incoraggiante</option>
           <option value="professional">💼 Professionale - formale e esperto</option>
         </select>
-
-        
       </div>
 
-      <div style="height:1px;background:var(--border);margin:16px 0"></div>
+      <div style="height:1px;background:var(--border-1);margin:16px 0"></div>
 
-      <!-- SEZIONE MEMORIA -->
       <div class="settings-section">
         <h4 class="section-title">💾 Memoria Persistente</h4>
         <p class="option-hint">Usa questo spazio per lasciare note all'AI su preferenze, regole, contesto personale</p>
         <textarea id="memory-note" rows="5" placeholder="Es: Preferisco risposte in italiano. Lavoro come sviluppatore. Mi piacciono gli esempi con codice."></textarea>
-        <p class="memory-hint">💡 Suggerimento: Aggiungi informazioni utili come preferenze linguistiche, ambito lavorativo, stile preferito</p>
+        <p class="memory-hint">💡 Suggerimento: aggiungi informazioni utili come preferenze linguistiche, ambito lavorativo, stile preferito.</p>
       </div>
 
-      <div style="height:1px;background:var(--border);margin:16px 0"></div>
+      <div style="height:1px;background:var(--border-1);margin:16px 0"></div>
 
-      <!-- SEZIONE GESTIONE -->
       <div class="settings-section">
         <h4 class="section-title">🗑️ Gestione Chat</h4>
         <button class="btn-danger" onclick="deleteAllChats()">Elimina tutte le chat</button>
-        <p class="danger-hint">⚠️ Questa azione è irreversibile. Eliminerà tutta la cronologia delle chat.</p>
+        <p class="danger-hint">⚠️ Questa azione e irreversibile. Eliminerà tutta la cronologia delle chat.</p>
       </div>
 
-      <p class="pre-release-note">⚠ PRE-RELEASE — alcune funzioni potrebbero non funzionare correttamente.</p>
+      <p class="pre-release-note">⚠ PRE-RELEASE - alcune funzioni potrebbero non funzionare correttamente.</p>
     </div>
     <div class="modal-actions">
       <button onclick="closeSettings()">Annulla</button>
