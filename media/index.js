@@ -582,8 +582,6 @@ async function sendMessage(message) {
     ? modelDropdown.value
     : DEFAULT_MODEL;
 
-  const controller = new AbortController();
-  const timerId    = setTimeout(() => controller.abort(), 20000);
   const requestBody = JSON.stringify({
     chatId:             activeChatId,
     message:            message,
@@ -598,31 +596,36 @@ async function sendMessage(message) {
   await appendMessageToFirestore(activeChatId, "user", message);
 
   try {
-    const response = await fetch(PROXY_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      signal: controller.signal,
-      body: requestBody
-    });
+    const requestServer = async (url) => {
+      const controller = new AbortController();
+      const timerId = setTimeout(() => controller.abort(), 20000);
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: requestBody
+        });
 
-    let finalResponse = response;
-    if (!response.ok && PROXY_URL !== FALLBACK_PROXY_URL) {
-      const errorData = await response.json().catch(() => ({}));
-      console.warn("Server principale non disponibile, provo il fallback:", errorData.error || response.status);
-      finalResponse = await fetch(FALLBACK_PROXY_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
-        body: requestBody
-      });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.error) {
+          throw new Error(data.error || `Errore HTTP ${response.status}`);
+        }
+        return data;
+      } finally {
+        clearTimeout(timerId);
+      }
+    };
+
+    let data;
+    try {
+      data = await requestServer(PROXY_URL);
+    } catch (primaryError) {
+      if (PROXY_URL === FALLBACK_PROXY_URL) throw primaryError;
+      console.warn("Server principale non disponibile, provo il fallback:", primaryError);
+      data = await requestServer(FALLBACK_PROXY_URL);
     }
 
-    if (!finalResponse.ok) {
-      const errorData = await finalResponse.json().catch(() => ({}));
-      throw new Error(errorData.error || `Errore HTTP ${finalResponse.status}`);
-    }
-
-    const data       = await finalResponse.json();
     const aiResponse = data.reply || "Errore AI";
 
     removeTyping();
@@ -638,7 +641,6 @@ async function sendMessage(message) {
 
   } catch (err) {
     removeTyping();
-    clearTimeout(timerId);
 
     let msg = "Errore di connessione.";
     if (err.name === "AbortError")                     msg = "Il server ha impiegato troppo tempo.";
