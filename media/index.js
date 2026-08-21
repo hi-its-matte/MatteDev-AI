@@ -25,6 +25,7 @@ import {
 
 const DEFAULT_PROXY_URL = "https://ai-api.mattedev.com/chat";
 const PROXY_URL = window.__CHAT_API_URL__ || DEFAULT_PROXY_URL;
+const FALLBACK_PROXY_URL = "https://ai-api.mattedev.com/fallback";
 const MIN_LOGIN_OVERLAY_MS = 0;
 const loginOverlayStartedAt = Date.now();
 let isSending = false;
@@ -583,6 +584,16 @@ async function sendMessage(message) {
 
   const controller = new AbortController();
   const timerId    = setTimeout(() => controller.abort(), 20000);
+  const requestBody = JSON.stringify({
+    chatId:             activeChatId,
+    message:            message,
+    uid:                currentUser.uid,
+    history:            activeChatHistory.slice(-40),
+    settings:           currentSettings,
+    memory:             userMemory,
+    systemMemoryPrompt: buildSystemMemoryPrompt(),
+    model:              selectedModel
+  });
 
   await appendMessageToFirestore(activeChatId, "user", message);
 
@@ -591,26 +602,27 @@ async function sendMessage(message) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       signal: controller.signal,
-      body: JSON.stringify({
-        chatId:             activeChatId,
-        message:            message,
-        uid:                currentUser.uid,
-        history:            activeChatHistory.slice(-40),
-        settings:           currentSettings,
-        memory:             userMemory,
-        systemMemoryPrompt: buildSystemMemoryPrompt(),
-        model:              selectedModel
-      })
+      body: requestBody
     });
 
-    clearTimeout(timerId);
-
-    if (!response.ok) {
+    let finalResponse = response;
+    if (!response.ok && PROXY_URL !== FALLBACK_PROXY_URL) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Errore HTTP ${response.status}`);
+      console.warn("Server principale non disponibile, provo il fallback:", errorData.error || response.status);
+      finalResponse = await fetch(FALLBACK_PROXY_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: requestBody
+      });
     }
 
-    const data       = await response.json();
+    if (!finalResponse.ok) {
+      const errorData = await finalResponse.json().catch(() => ({}));
+      throw new Error(errorData.error || `Errore HTTP ${finalResponse.status}`);
+    }
+
+    const data       = await finalResponse.json();
     const aiResponse = data.reply || "Errore AI";
 
     removeTyping();
