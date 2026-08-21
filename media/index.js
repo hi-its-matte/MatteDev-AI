@@ -609,7 +609,10 @@ async function sendMessage(message) {
 
         const data = await response.json().catch(() => ({}));
         if (!response.ok || data.error) {
-          throw new Error(data.error || `Errore HTTP ${response.status}`);
+          const error = new Error(data.error || `Errore HTTP ${response.status}`);
+          error.status = response.status;
+          error.endpoint = url;
+          throw error;
         }
         return data;
       } finally {
@@ -645,6 +648,7 @@ async function sendMessage(message) {
     let msg = "Errore di connessione.";
     if (err.name === "AbortError")                     msg = "Il server ha impiegato troppo tempo.";
     else if (err.message.includes("Gemini API error")) msg = "Errore dalle API di Google.";
+    else if (err.status)                                msg = `Il server ha rifiutato la richiesta (HTTP ${err.status}).`;
 
     appendMessage("assistant", msg);
     console.error("Dettaglio errore:", err);
